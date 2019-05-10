@@ -1,0 +1,7 @@
+{
+    "multipart": [
+        {
+            "apply": { "model": "block/redstone_lamp" }
+        }
+    ]
+}
