@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "bluelightspecial",
+  "version": "${version}",
+
+  "name": "Blue Light Special",
+  "description": "Adds fluorescent lights and plants.",
+  "authors": [
+    "kwerti"
+  ],
+  "contact": {
+    "homepage": "https://github.com/kvverti/blue-light-special",
+    "sources": "https://github.com/kvverti/blue-light-special"
+  },
+
+  "license": "MIT",
+  "icon": "assets/bluelightspecial/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.kvverti.bluelightspecial.BlueLightSpecial"
+    ]
+  },
+
+  "requires": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
