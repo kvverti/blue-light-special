@@ -28,9 +28,13 @@ public class FluorescentLightBlock extends Block {
             .with(RIGHT, false));
     }
 
-
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> factory) {
         factory.add(LIT, FACING, FORE, BACK, LEFT, RIGHT);
+    }
+
+    @Override
+    public int getLuminance(BlockState state) {
+        return state.get(LIT) ? super.getLuminance(state) : 0;
     }
 }
