@@ -1,0 +1,16 @@
+{
+    "ambientocclusion": false,
+    "textures": {
+        "particle": "bluelightspecial:block/fluorescent_light",
+        "light": "bluelightspecial:block/fluorescent_light"
+    },
+    "elements": [
+        {
+            "from": [7, 2, 7],
+            "to": [9, 2, 9],
+            "faces": {
+                "up": { "texture": "#light" }
+            }
+        }
+    ]
+}

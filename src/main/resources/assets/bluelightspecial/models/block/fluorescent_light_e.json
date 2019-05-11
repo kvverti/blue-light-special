@@ -1,0 +1,19 @@
+{
+    "ambientocclusion": false,
+    "textures": {
+        "particle": "bluelightspecial:block/fluorescent_light",
+        "light": "bluelightspecial:block/fluorescent_light",
+        "side": "bluelightspecial:block/fluorescent_light_side"
+    },
+    "elements": [
+        {
+            "from": [9, 0, 7],
+            "to": [16, 2, 9],
+            "faces": {
+                "up": { "texture": "#light" },
+                "north": { "texture": "#side" },
+                "south": { "texture": "#side" }
+            }
+        }
+    ]
+}
