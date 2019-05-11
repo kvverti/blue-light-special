@@ -1,8 +1,8 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "particle": "bluelightspecial:block/fluorescent_light",
-        "light": "bluelightspecial:block/fluorescent_light"
+        "particle": "#light",
+        "base": "bluelightspecial:block/fluorescent_light_base"
     },
     "elements": [
         {
@@ -10,6 +10,14 @@
             "to": [9, 2, 9],
             "faces": {
                 "up": { "texture": "#light" }
+            }
+        },
+        {
+            "from": [7, 0.005, 7],
+            "to": [9, 0.005, 9],
+            "faces": {
+                "up": { "texture": "#base" },
+                "down": { "texture": "#base" }
             }
         }
     ]

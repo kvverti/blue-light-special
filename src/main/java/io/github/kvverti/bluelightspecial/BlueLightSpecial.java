@@ -20,25 +20,31 @@ public class BlueLightSpecial implements ModInitializer {
 
     // custom blocks
 
-    public static final Block FLUORESCENT_LIGHT = new FluorescentLightBlock(
-        FabricBlockSettings.of(Material.GLASS)
-            .sounds(BlockSoundGroup.GLASS)
-            .noCollision()
-            .lightLevel(15)
-            .build());
+    public static final Block WHITE_FLUORESCENT_LIGHT;
 
     // custom items
-    public static final Item FLUORESCENT_LIGHT_ITEM = new BlockItem(
-        FLUORESCENT_LIGHT,
-        new Item.Settings()
-            .itemGroup(ItemGroup.REDSTONE));
+
+    public static final Item WHITE_FLUORESCENT_LIGHT_ITEM;
 
     @Override
     public void onInitialize() {
         // blocks
-        Registry.register(Registry.BLOCK, new Identifier(MODID, "fluorescent_light"), FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "white_fluorescent_light"), WHITE_FLUORESCENT_LIGHT);
 
         // items
-        Registry.register(Registry.ITEM, new Identifier(MODID, "fluorescent_light"), FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "white_fluorescent_light"), WHITE_FLUORESCENT_LIGHT_ITEM);
+    }
+
+    static {
+        Block.Settings lightSettings = FabricBlockSettings.of(Material.GLASS)
+            .sounds(BlockSoundGroup.GLASS)
+            .noCollision()
+            .lightLevel(15)
+            .build();
+        WHITE_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+
+        Item.Settings lightItemSettings = new Item.Settings()
+            .itemGroup(ItemGroup.REDSTONE);
+        WHITE_FLUORESCENT_LIGHT_ITEM = new BlockItem(WHITE_FLUORESCENT_LIGHT, lightItemSettings);
     }
 }

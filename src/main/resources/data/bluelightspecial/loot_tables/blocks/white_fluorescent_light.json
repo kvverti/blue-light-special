@@ -6,7 +6,7 @@
             "entries": [
                 {
                     "type": "minecraft:item",
-                    "name": "bluelightspecial:fluorescent_light"
+                    "name": "bluelightspecial:white_fluorescent_light"
                 }
             ],
             "conditions": [

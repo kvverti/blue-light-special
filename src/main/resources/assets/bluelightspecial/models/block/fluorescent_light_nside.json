@@ -1,8 +1,7 @@
 {
     "ambientocclusion": false,
     "textures": {
-        "particle": "bluelightspecial:block/fluorescent_light",
-        "side": "bluelightspecial:block/fluorescent_light_side"
+        "particle": "#light"
     },
     "elements": [
         {

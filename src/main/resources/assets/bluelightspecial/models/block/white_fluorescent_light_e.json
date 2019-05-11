@@ -1,0 +1,7 @@
+{
+    "parent": "bluelightspecial:block/fluorescent_light_e",
+    "textures": {
+        "light": "bluelightspecial:block/white_fluorescent_light_top",
+        "side": "bluelightspecial:block/white_fluorescent_light_side"
+    }
+}

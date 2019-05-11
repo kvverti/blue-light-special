@@ -5,6 +5,7 @@ import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
@@ -47,6 +48,11 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
     @Override
     public int getLuminance(BlockState state) {
         return state.get(POWER) != 0 ? super.getLuminance(state) : 0;
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.TRANSLUCENT;
     }
 
     @Override
