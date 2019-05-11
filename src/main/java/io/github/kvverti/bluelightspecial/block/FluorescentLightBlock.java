@@ -2,6 +2,8 @@ package io.github.kvverti.bluelightspecial.block;
 
 import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
 
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
@@ -15,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.ViewableWorld;
+import net.minecraft.world.World;
 
 public class FluorescentLightBlock extends Block implements FluorescentPowerSource {
 
@@ -55,6 +58,10 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
+        if(!ctx.getWorld().isClient()) {
+            // properly set power value once connections are set up
+            ctx.getWorld().getBlockTickScheduler().schedule(ctx.getBlockPos(), this, 1);
+        }
         return getDefaultState().with(ATTACH, ctx.getFacing().getOpposite());
     }
 
@@ -67,16 +74,30 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
         Direction attach = self.get(ATTACH);
         // neighbor is to the "side"
         if(attach != dir && attach.getOpposite() != dir) {
-            if(neighbor.getBlock() instanceof FluorescentLightBlock) {
-                if(self.get(ATTACH) == neighbor.get(ATTACH)) {
-                    // new fluorescent light block next to us
-                    return self.with(getRelativeDirection(self, dir), true);
-                }
-            }
-            // fluorescent light block no longer next to us
-            return self.with(getRelativeDirection(self, dir), false);
+            boolean lightIsConnected =
+                neighbor.getBlock() instanceof FluorescentLightBlock &&
+                self.get(ATTACH) == neighbor.get(ATTACH);
+            self = self.with(getRelativeDirection(self, dir), lightIsConnected);
         }
         return self;
+    }
+
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block neighbor, BlockPos neighborPos, boolean idk) {
+        // update light power level immediately, without tick delay
+        if(!world.isClient()) {
+            int newPower = getPowerFromSurroundings(state, world, pos);
+            world.setBlockState(pos, state.with(POWER, newPower));
+        }
+    }
+
+    @Override
+    public void onScheduledTick(BlockState state, World world, BlockPos pos, Random rand) {
+        // update light power level
+        if(!world.isClient()) {
+            int newPower = getPowerFromSurroundings(state, world, pos);
+            world.setBlockState(pos, state.with(POWER, newPower));
+        }
     }
 
     @Override
@@ -113,5 +134,31 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
             throw new IllegalArgumentException("Invalid direction: " + dir);
         }
         return ret;
+    }
+
+    private static final Direction[][] SIDE_DIRECTIONS = {
+        /* DOWN/UP */ { Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST },
+        /* NORTH/SOUTH */ { Direction.DOWN, Direction.UP, Direction.WEST, Direction.EAST },
+        /* WEST/EAST */ { Direction.DOWN, Direction.UP, Direction.NORTH, Direction.SOUTH }
+    };
+
+    /**
+     * Gets the max power from the state's valid surrounding blocks.
+     */
+    private int getPowerFromSurroundings(BlockState state, World world, BlockPos pos) {
+        Direction attach = state.get(ATTACH);
+        // get weak redstone power from the blocks we are attached to
+        int power = world.getEmittedRedstonePower(pos.offset(attach), attach);
+        // get light power and weak redstone power from the sides
+        for(Direction dir : SIDE_DIRECTIONS[attach.getId() / 2]) {
+            BlockPos offset = pos.offset(dir);
+            BlockState offsetState = world.getBlockState(offset);
+            power = Math.max(power, world.getEmittedRedstonePower(offset, dir));
+            if(offsetState.getBlock() instanceof FluorescentPowerSource) {
+                power = Math.max(power, ((FluorescentPowerSource)offsetState.getBlock())
+                    .getPowerLevel(offsetState, world, offset, dir.getOpposite(), attach) - 1);
+            }
+        }
+        return power;
     }
 }
