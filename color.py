@@ -27,10 +27,10 @@ if __name__ == '__main__':
     base_file = sys.argv[2]
     src_color = sys.argv[3]
     data = ''
-    with open(f'src/main/resources/assets/bluelightspecial/{path}/{src_color}_{base_file}', encoding='UTF-8') as src_file:
+    with open(f'src/main/resources/{path}/{src_color}_{base_file}', encoding='UTF-8') as src_file:
         data = src_file.read()
     for color in colors:
         if color != src_color:
             new_data = data.replace(src_color, color)
-            with open(f'src/main/resources/assets/bluelightspecial/{path}/{color}_{base_file}', 'w', encoding='UTF-8') as dst_file:
+            with open(f'src/main/resources/{path}/{color}_{base_file}', 'w', encoding='UTF-8') as dst_file:
                 dst_file.write(new_data)
