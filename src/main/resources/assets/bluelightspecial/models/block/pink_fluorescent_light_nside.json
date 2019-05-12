@@ -1,0 +1,7 @@
+{
+    "parent": "bluelightspecial:block/fluorescent_light_nside",
+    "textures": {
+        "light": "bluelightspecial:block/pink_fluorescent_light_top",
+        "side": "bluelightspecial:block/pink_fluorescent_light_side"
+    }
+}

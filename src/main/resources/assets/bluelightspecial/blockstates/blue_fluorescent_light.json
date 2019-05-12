@@ -1,0 +1,220 @@
+{
+    "multipart": [
+        {
+            "when": { "attach": "down" },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nub", "uvlock": true }
+        },
+        {
+            "when": { "attach": "down", "fore": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_n", "uvlock": true }
+        },
+        {
+            "when": { "attach": "down", "fore": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nside", "uvlock": true }
+        },
+        {
+            "when": { "attach": "down", "right": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_e", "uvlock": true }
+        },
+        {
+            "when": { "attach": "down", "right": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_eside", "uvlock": true }
+        },
+        {
+            "when": { "attach": "down", "back": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_n", "uvlock": true, "y": 180 }
+        },
+        {
+            "when": { "attach": "down", "back": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nside", "uvlock": true, "y": 180 }
+        },
+        {
+            "when": { "attach": "down", "left": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_e", "uvlock": true, "y": 180 }
+        },
+        {
+            "when": { "attach": "down", "left": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_eside", "uvlock": true, "y": 180 }
+        },
+        {
+            "when": { "attach": "up" },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nub", "uvlock": true, "x": 180 }
+        },
+        {
+            "when": { "attach": "up", "fore": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_n", "uvlock": true, "x": 180 }
+        },
+        {
+            "when": { "attach": "up", "fore": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nside", "uvlock": true, "x": 180 }
+        },
+        {
+            "when": { "attach": "up", "right": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_e", "uvlock": true, "x": 180 }
+        },
+        {
+            "when": { "attach": "up", "right": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_eside", "uvlock": true, "x": 180 }
+        },
+        {
+            "when": { "attach": "up", "back": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_n", "uvlock": true, "x": 180, "y": 180 }
+        },
+        {
+            "when": { "attach": "up", "back": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nside", "uvlock": true, "x": 180, "y": 180 }
+        },
+        {
+            "when": { "attach": "up", "left": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_e", "uvlock": true, "x": 180, "y": 180 }
+        },
+        {
+            "when": { "attach": "up", "left": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_eside", "uvlock": true, "x": 180, "y": 180 }
+        },
+        {
+            "when": { "attach": "north" },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nub", "uvlock": true, "x": -90 }
+        },
+        {
+            "when": { "attach": "north", "fore": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_n", "uvlock": true, "x": -90 }
+        },
+        {
+            "when": { "attach": "north", "fore": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nside", "uvlock": true, "x": -90 }
+        },
+        {
+            "when": { "attach": "north", "right": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_e", "uvlock": true, "x": -90 }
+        },
+        {
+            "when": { "attach": "north", "right": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_eside", "uvlock": true, "x": -90 }
+        },
+        {
+            "when": { "attach": "north", "back": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_n", "uvlock": true, "x": 90, "y": 180 }
+        },
+        {
+            "when": { "attach": "north", "back": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nside", "uvlock": true, "x": 90, "y": 180 }
+        },
+        {
+            "when": { "attach": "north", "left": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_e", "uvlock": true, "x": 90, "y": 180 }
+        },
+        {
+            "when": { "attach": "north", "left": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_eside", "uvlock": true, "x": 90, "y": 180 }
+        },
+        {
+            "when": { "attach": "south" },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nub", "uvlock": true, "x": -90, "y": 180 }
+        },
+        {
+            "when": { "attach": "south", "fore": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_n", "uvlock": true, "x": -90, "y": 180 }
+        },
+        {
+            "when": { "attach": "south", "fore": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nside", "uvlock": true, "x": -90, "y": 180 }
+        },
+        {
+            "when": { "attach": "south", "right": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_e", "uvlock": true, "x": -90, "y": 180 }
+        },
+        {
+            "when": { "attach": "south", "right": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_eside", "uvlock": true, "x": -90, "y": 180 }
+        },
+        {
+            "when": { "attach": "south", "back": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_n", "uvlock": true, "x": 90 }
+        },
+        {
+            "when": { "attach": "south", "back": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nside", "uvlock": true, "x": 90 }
+        },
+        {
+            "when": { "attach": "south", "left": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_e", "uvlock": true, "x": 90 }
+        },
+        {
+            "when": { "attach": "south", "left": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_eside", "uvlock": true, "x": 90 }
+        },
+        {
+            "when": { "attach": "west" },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nub", "uvlock": true, "x": -90, "y": -90 }
+        },
+        {
+            "when": { "attach": "west", "fore": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_n", "uvlock": true, "x": -90, "y": -90 }
+        },
+        {
+            "when": { "attach": "west", "fore": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nside", "uvlock": true, "x": -90, "y": -90 }
+        },
+        {
+            "when": { "attach": "west", "right": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_e", "uvlock": true, "x": -90, "y": -90 }
+        },
+        {
+            "when": { "attach": "west", "right": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_eside", "uvlock": true, "x": -90, "y": -90 }
+        },
+        {
+            "when": { "attach": "west", "back": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_n", "uvlock": true, "x": 90, "y": 90 }
+        },
+        {
+            "when": { "attach": "west", "back": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nside", "uvlock": true, "x": 90, "y": 90 }
+        },
+        {
+            "when": { "attach": "west", "left": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_e", "uvlock": true, "x": 90, "y": 90 }
+        },
+        {
+            "when": { "attach": "west", "left": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_eside", "uvlock": true, "x": 90, "y": 90 }
+        },
+        {
+            "when": { "attach": "east" },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nub", "uvlock": true, "x": -90, "y": 90 }
+        },
+        {
+            "when": { "attach": "east", "fore": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_n", "uvlock": true, "x": -90, "y": 90 }
+        },
+        {
+            "when": { "attach": "east", "fore": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nside", "uvlock": true, "x": -90, "y": 90 }
+        },
+        {
+            "when": { "attach": "east", "right": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_e", "uvlock": true, "x": -90, "y": 90 }
+        },
+        {
+            "when": { "attach": "east", "right": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_eside", "uvlock": true, "x": -90, "y": 90 }
+        },
+        {
+            "when": { "attach": "east", "back": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_n", "uvlock": true, "x": 90, "y": -90 }
+        },
+        {
+            "when": { "attach": "east", "back": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_nside", "uvlock": true, "x": 90, "y": -90 }
+        },
+        {
+            "when": { "attach": "east", "left": true },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_e", "uvlock": true, "x": 90, "y": -90 }
+        },
+        {
+            "when": { "attach": "east", "left": false },
+            "apply": { "model": "bluelightspecial:block/blue_fluorescent_light_eside", "uvlock": true, "x": 90, "y": -90 }
+        }
+    ]
+}

@@ -21,18 +21,78 @@ public class BlueLightSpecial implements ModInitializer {
     // custom blocks
 
     public static final Block WHITE_FLUORESCENT_LIGHT;
+    public static final Block ORANGE_FLUORESCENT_LIGHT;
+    public static final Block MAGENTA_FLUORESCENT_LIGHT;
+    public static final Block LIGHT_BLUE_FLUORESCENT_LIGHT;
+    public static final Block YELLOW_FLUORESCENT_LIGHT;
+    public static final Block LIME_FLUORESCENT_LIGHT;
+    public static final Block PINK_FLUORESCENT_LIGHT;
+    public static final Block GRAY_FLUORESCENT_LIGHT;
+    public static final Block LIGHT_GRAY_FLUORESCENT_LIGHT;
+    public static final Block CYAN_FLUORESCENT_LIGHT;
+    public static final Block PURPLE_FLUORESCENT_LIGHT;
+    public static final Block BLUE_FLUORESCENT_LIGHT;
+    public static final Block BROWN_FLUORESCENT_LIGHT;
+    public static final Block GREEN_FLUORESCENT_LIGHT;
+    public static final Block RED_FLUORESCENT_LIGHT;
+    public static final Block BLACK_FLUORESCENT_LIGHT;
 
     // custom items
 
     public static final Item WHITE_FLUORESCENT_LIGHT_ITEM;
+    public static final Item ORANGE_FLUORESCENT_LIGHT_ITEM;
+    public static final Item MAGENTA_FLUORESCENT_LIGHT_ITEM;
+    public static final Item LIGHT_BLUE_FLUORESCENT_LIGHT_ITEM;
+    public static final Item YELLOW_FLUORESCENT_LIGHT_ITEM;
+    public static final Item LIME_FLUORESCENT_LIGHT_ITEM;
+    public static final Item PINK_FLUORESCENT_LIGHT_ITEM;
+    public static final Item GRAY_FLUORESCENT_LIGHT_ITEM;
+    public static final Item LIGHT_GRAY_FLUORESCENT_LIGHT_ITEM;
+    public static final Item CYAN_FLUORESCENT_LIGHT_ITEM;
+    public static final Item PURPLE_FLUORESCENT_LIGHT_ITEM;
+    public static final Item BLUE_FLUORESCENT_LIGHT_ITEM;
+    public static final Item BROWN_FLUORESCENT_LIGHT_ITEM;
+    public static final Item GREEN_FLUORESCENT_LIGHT_ITEM;
+    public static final Item RED_FLUORESCENT_LIGHT_ITEM;
+    public static final Item BLACK_FLUORESCENT_LIGHT_ITEM;
 
     @Override
     public void onInitialize() {
         // blocks
         Registry.register(Registry.BLOCK, new Identifier(MODID, "white_fluorescent_light"), WHITE_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "orange_fluorescent_light"), ORANGE_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "magenta_fluorescent_light"), MAGENTA_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "light_blue_fluorescent_light"), LIGHT_BLUE_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "yellow_fluorescent_light"), YELLOW_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "lime_fluorescent_light"), LIME_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "pink_fluorescent_light"), PINK_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "gray_fluorescent_light"), GRAY_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "light_gray_fluorescent_light"), LIGHT_GRAY_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "cyan_fluorescent_light"), CYAN_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "purple_fluorescent_light"), PURPLE_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "blue_fluorescent_light"), BLUE_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "brown_fluorescent_light"), BROWN_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "green_fluorescent_light"), GREEN_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "red_fluorescent_light"), RED_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "black_fluorescent_light"), BLACK_FLUORESCENT_LIGHT);
 
         // items
         Registry.register(Registry.ITEM, new Identifier(MODID, "white_fluorescent_light"), WHITE_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "orange_fluorescent_light"), ORANGE_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "magenta_fluorescent_light"), MAGENTA_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "light_blue_fluorescent_light"), LIGHT_BLUE_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "yellow_fluorescent_light"), YELLOW_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "lime_fluorescent_light"), LIME_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "pink_fluorescent_light"), PINK_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "gray_fluorescent_light"), GRAY_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "light_gray_fluorescent_light"), LIGHT_GRAY_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "cyan_fluorescent_light"), CYAN_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "purple_fluorescent_light"), PURPLE_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "blue_fluorescent_light"), BLUE_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "brown_fluorescent_light"), BROWN_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "green_fluorescent_light"), GREEN_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "red_fluorescent_light"), RED_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "black_fluorescent_light"), BLACK_FLUORESCENT_LIGHT_ITEM);
     }
 
     static {
@@ -42,9 +102,39 @@ public class BlueLightSpecial implements ModInitializer {
             .lightLevel(15)
             .build();
         WHITE_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        ORANGE_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        MAGENTA_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        LIGHT_BLUE_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        YELLOW_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        LIME_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        PINK_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        GRAY_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        LIGHT_GRAY_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        CYAN_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        PURPLE_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        BLUE_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        BROWN_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        GREEN_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        RED_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        BLACK_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
 
         Item.Settings lightItemSettings = new Item.Settings()
             .itemGroup(ItemGroup.REDSTONE);
         WHITE_FLUORESCENT_LIGHT_ITEM = new BlockItem(WHITE_FLUORESCENT_LIGHT, lightItemSettings);
+        ORANGE_FLUORESCENT_LIGHT_ITEM = new BlockItem(ORANGE_FLUORESCENT_LIGHT, lightItemSettings);
+        MAGENTA_FLUORESCENT_LIGHT_ITEM = new BlockItem(MAGENTA_FLUORESCENT_LIGHT, lightItemSettings);
+        LIGHT_BLUE_FLUORESCENT_LIGHT_ITEM = new BlockItem(LIGHT_BLUE_FLUORESCENT_LIGHT, lightItemSettings);
+        YELLOW_FLUORESCENT_LIGHT_ITEM = new BlockItem(YELLOW_FLUORESCENT_LIGHT, lightItemSettings);
+        LIME_FLUORESCENT_LIGHT_ITEM = new BlockItem(LIME_FLUORESCENT_LIGHT, lightItemSettings);
+        PINK_FLUORESCENT_LIGHT_ITEM = new BlockItem(PINK_FLUORESCENT_LIGHT, lightItemSettings);
+        GRAY_FLUORESCENT_LIGHT_ITEM = new BlockItem(GRAY_FLUORESCENT_LIGHT, lightItemSettings);
+        LIGHT_GRAY_FLUORESCENT_LIGHT_ITEM = new BlockItem(LIGHT_GRAY_FLUORESCENT_LIGHT, lightItemSettings);
+        CYAN_FLUORESCENT_LIGHT_ITEM = new BlockItem(CYAN_FLUORESCENT_LIGHT, lightItemSettings);
+        PURPLE_FLUORESCENT_LIGHT_ITEM = new BlockItem(PURPLE_FLUORESCENT_LIGHT, lightItemSettings);
+        BLUE_FLUORESCENT_LIGHT_ITEM = new BlockItem(BLUE_FLUORESCENT_LIGHT, lightItemSettings);
+        BROWN_FLUORESCENT_LIGHT_ITEM = new BlockItem(BROWN_FLUORESCENT_LIGHT, lightItemSettings);
+        GREEN_FLUORESCENT_LIGHT_ITEM = new BlockItem(GREEN_FLUORESCENT_LIGHT, lightItemSettings);
+        RED_FLUORESCENT_LIGHT_ITEM = new BlockItem(RED_FLUORESCENT_LIGHT, lightItemSettings);
+        BLACK_FLUORESCENT_LIGHT_ITEM = new BlockItem(BLACK_FLUORESCENT_LIGHT, lightItemSettings);
     }
 }
