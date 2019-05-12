@@ -2,6 +2,8 @@ package io.github.kvverti.bluelightspecial.block;
 
 import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -9,6 +11,7 @@ import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.block.ColoredBlock;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.BooleanProperty;
@@ -18,6 +21,9 @@ import net.minecraft.state.property.Property;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
@@ -30,6 +36,8 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
     public static final Property<Boolean> BACK = BooleanProperty.create("back");
     public static final Property<Boolean> LEFT = BooleanProperty.create("left");
     public static final Property<Boolean> RIGHT = BooleanProperty.create("right");
+
+    private static final Map<BlockState, VoxelShape> boundingBoxes = new HashMap<>();
 
     private final DyeColor color;
 
@@ -63,6 +71,34 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.TRANSLUCENT;
+    }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, EntityContext ctx) {
+        return boundingBoxes.computeIfAbsent(state, FluorescentLightBlock::computeVoxelShape);
+    }
+
+    private static VoxelShape[][] BBS_TABLE;
+
+    /**
+     * Creates a bounding box for the given state.
+     */
+    private static VoxelShape computeVoxelShape(BlockState state) {
+        VoxelShape[] bbs = BBS_TABLE[state.get(ATTACH).getId()];
+        VoxelShape bb = bbs[0];
+        if(state.get(BACK)) {
+            bb = VoxelShapes.union(bb, bbs[1]);
+        }
+        if(state.get(FORE)) {
+            bb = VoxelShapes.union(bb, bbs[2]);
+        }
+        if(state.get(LEFT)) {
+            bb = VoxelShapes.union(bb, bbs[3]);
+        }
+        if(state.get(RIGHT)) {
+            bb = VoxelShapes.union(bb, bbs[4]);
+        }
+        return bb;
     }
 
     @Override
@@ -176,5 +212,55 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
             }
         }
         return power;
+    }
+
+    static {
+        // stores an array keyed by the direction enum. The indices of
+        // the sub-arrays correspond to: none, back, fore, left, right
+        VoxelShape[][] bbsTable = {
+            /* DOWN */ {
+                Block.createCuboidShape(7.0, 0.0, 7.0, 9.0, 2.0, 9.0),
+                Block.createCuboidShape(7.0, 0.0, 7.0, 9.0, 2.0, 16.0),
+                Block.createCuboidShape(7.0, 0.0, 0.0, 9.0, 2.0, 9.0),
+                Block.createCuboidShape(0.0, 0.0, 7.0, 9.0, 2.0, 9.0),
+                Block.createCuboidShape(7.0, 0.0, 7.0, 16.0, 2.0, 9.0)
+            },
+            /* UP */ {
+                Block.createCuboidShape(7.0, 14.0, 7.0, 9.0, 16.0, 9.0),
+                Block.createCuboidShape(7.0, 14.0, 0.0, 9.0, 16.0, 9.0),
+                Block.createCuboidShape(7.0, 14.0, 7.0, 9.0, 16.0, 16.0),
+                Block.createCuboidShape(0.0, 14.0, 7.0, 9.0, 16.0, 9.0),
+                Block.createCuboidShape(7.0, 14.0, 7.0, 16.0, 16.0, 9.0)
+            },
+            /* NORTH */ {
+                Block.createCuboidShape(7.0, 7.0, 0.0, 9.0, 9.0, 2.0),
+                Block.createCuboidShape(7.0, 0.0, 0.0, 9.0, 9.0, 2.0),
+                Block.createCuboidShape(7.0, 7.0, 0.0, 9.0, 16.0, 2.0),
+                Block.createCuboidShape(0.0, 7.0, 0.0, 9.0, 9.0, 2.0),
+                Block.createCuboidShape(7.0, 7.0, 0.0, 16.0, 9.0, 2.0)
+            },
+            /* SOUTH */ {
+                Block.createCuboidShape(7.0, 7.0, 14.0, 9.0, 9.0, 16.0),
+                Block.createCuboidShape(7.0, 0.0, 14.0, 9.0, 9.0, 16.0),
+                Block.createCuboidShape(7.0, 7.0, 14.0, 9.0, 16.0, 16.0),
+                Block.createCuboidShape(7.0, 7.0, 14.0, 16.0, 9.0, 16.0),
+                Block.createCuboidShape(0.0, 7.0, 14.0, 9.0, 9.0, 16.0)
+            },
+            /* WEST */ {
+                Block.createCuboidShape(0.0, 7.0, 7.0, 2.0, 9.0, 9.0),
+                Block.createCuboidShape(0.0, 0.0, 7.0, 2.0, 9.0, 9.0),
+                Block.createCuboidShape(0.0, 7.0, 7.0, 2.0, 16.0, 9.0),
+                Block.createCuboidShape(0.0, 7.0, 7.0, 2.0, 9.0, 16.0),
+                Block.createCuboidShape(0.0, 7.0, 0.0, 2.0, 9.0, 9.0)
+            },
+            /* EAST */ {
+                Block.createCuboidShape(14.0, 7.0, 7.0, 16.0, 9.0, 9.0),
+                Block.createCuboidShape(14.0, 0.0, 7.0, 16.0, 9.0, 9.0),
+                Block.createCuboidShape(14.0, 7.0, 7.0, 16.0, 16.0, 9.0),
+                Block.createCuboidShape(14.0, 7.0, 0.0, 16.0, 9.0, 9.0),
+                Block.createCuboidShape(14.0, 7.0, 7.0, 16.0, 9.0, 16.0)
+            }
+        };
+        BBS_TABLE = bbsTable;
     }
 }
