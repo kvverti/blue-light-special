@@ -8,19 +8,21 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.block.ColoredBlock;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.IntegerProperty;
 import net.minecraft.state.property.Property;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
 
-public class FluorescentLightBlock extends Block implements FluorescentPowerSource {
+public class FluorescentLightBlock extends Block implements FluorescentPowerSource, ColoredBlock {
 
     public static final Property<Integer> POWER = IntegerProperty.create("power", 0, 15);
     public static final Property<Direction> ATTACH = DirectionProperty.create("attach", d -> true);
@@ -29,11 +31,14 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
     public static final Property<Boolean> LEFT = BooleanProperty.create("left");
     public static final Property<Boolean> RIGHT = BooleanProperty.create("right");
 
-    public FluorescentLightBlock(Block.Settings settings) {
+    private final DyeColor color;
+
+    public FluorescentLightBlock(DyeColor color, Block.Settings settings) {
         super(settings);
+        this.color = color;
         this.setDefaultState(this.stateFactory.getDefaultState()
             .with(POWER, 0)
-            .with(ATTACH, Direction.UP)
+            .with(ATTACH, Direction.DOWN)
             .with(FORE, false)
             .with(BACK, false)
             .with(LEFT, false)
@@ -43,6 +48,11 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> factory) {
         factory.add(POWER, ATTACH, FORE, BACK, LEFT, RIGHT);
+    }
+
+    @Override
+    public DyeColor getColor() {
+        return color;
     }
 
     @Override

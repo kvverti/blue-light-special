@@ -11,6 +11,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -101,22 +102,22 @@ public class BlueLightSpecial implements ModInitializer {
             .noCollision()
             .lightLevel(15)
             .build();
-        WHITE_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        ORANGE_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        MAGENTA_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        LIGHT_BLUE_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        YELLOW_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        LIME_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        PINK_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        GRAY_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        LIGHT_GRAY_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        CYAN_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        PURPLE_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        BLUE_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        BROWN_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        GREEN_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        RED_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
-        BLACK_FLUORESCENT_LIGHT = new FluorescentLightBlock(lightSettings);
+        WHITE_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.WHITE, lightSettings);
+        ORANGE_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.ORANGE, lightSettings);
+        MAGENTA_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.MAGENTA, lightSettings);
+        LIGHT_BLUE_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.LIGHT_BLUE, lightSettings);
+        YELLOW_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.YELLOW, lightSettings);
+        LIME_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.LIME, lightSettings);
+        PINK_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.PINK, lightSettings);
+        GRAY_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.GRAY, lightSettings);
+        LIGHT_GRAY_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.LIGHT_GRAY, lightSettings);
+        CYAN_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.CYAN, lightSettings);
+        PURPLE_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.PURPLE, lightSettings);
+        BLUE_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.BLUE, lightSettings);
+        BROWN_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.BROWN, lightSettings);
+        GREEN_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.GREEN, lightSettings);
+        RED_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.RED, lightSettings);
+        BLACK_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.BLACK, lightSettings);
 
         Item.Settings lightItemSettings = new Item.Settings()
             .itemGroup(ItemGroup.REDSTONE);
