@@ -124,12 +124,12 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
             return Blocks.AIR.getDefaultState();
         }
         Direction attach = self.get(ATTACH);
-        // neighbor is to the "side"
-        if(attach != dir && attach.getOpposite() != dir) {
-            boolean lightIsConnected =
-                neighbor.getBlock() instanceof FluorescentLightBlock &&
-                self.get(ATTACH) == neighbor.get(ATTACH);
-            self = self.with(getRelativeDirection(self, dir), lightIsConnected);
+        if(neighbor.getBlock() instanceof FluorescentPowerSource) {
+            FluorescentPowerSource src = (FluorescentPowerSource)neighbor.getBlock();
+            boolean connected = src.canConnect(neighbor, world, neighborPos, dir.getOpposite(), attach);
+            self = self.with(getRelativeDirection(self, dir), connected);
+        } else {
+            self = self.with(getRelativeDirection(self, dir), false);
         }
         return self;
     }
@@ -163,6 +163,12 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public boolean canConnect(BlockState state, ViewableWorld world, BlockPos pos, Direction side, Direction attach) {
+        Direction base = state.get(ATTACH);
+        return base == attach && side != base && side != base.getOpposite();
     }
 
     private static final Property<?>[][] PROPERTY_TABLE = {

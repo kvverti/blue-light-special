@@ -14,4 +14,11 @@ public interface FluorescentPowerSource {
      * @param attach the direction offset through which power is supplied
      */
     int getPowerLevel(BlockState state, ViewableWorld world, BlockPos pos, Direction side, Direction attach);
+
+    /**
+     * Returns whether the given block state can connect through the given side.
+     * @param side the direction of connection
+     * @param attach the face on which the connection is
+     */
+    boolean canConnect(BlockState state, ViewableWorld world, BlockPos pos, Direction side, Direction attach);
 }
