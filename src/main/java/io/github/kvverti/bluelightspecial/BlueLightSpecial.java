@@ -37,6 +37,7 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Block GREEN_FLUORESCENT_LIGHT;
     public static final Block RED_FLUORESCENT_LIGHT;
     public static final Block BLACK_FLUORESCENT_LIGHT;
+    public static final Block FLUORESCENT_TUBE;
 
     // custom items
 
@@ -56,6 +57,7 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Item GREEN_FLUORESCENT_LIGHT_ITEM;
     public static final Item RED_FLUORESCENT_LIGHT_ITEM;
     public static final Item BLACK_FLUORESCENT_LIGHT_ITEM;
+    public static final Item FLUORESCENT_TUBE_ITEM;
 
     @Override
     public void onInitialize() {
@@ -76,6 +78,7 @@ public class BlueLightSpecial implements ModInitializer {
         Registry.register(Registry.BLOCK, new Identifier(MODID, "green_fluorescent_light"), GREEN_FLUORESCENT_LIGHT);
         Registry.register(Registry.BLOCK, new Identifier(MODID, "red_fluorescent_light"), RED_FLUORESCENT_LIGHT);
         Registry.register(Registry.BLOCK, new Identifier(MODID, "black_fluorescent_light"), BLACK_FLUORESCENT_LIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "fluorescent_tube"), FLUORESCENT_TUBE);
 
         // items
         Registry.register(Registry.ITEM, new Identifier(MODID, "white_fluorescent_light"), WHITE_FLUORESCENT_LIGHT_ITEM);
@@ -94,6 +97,7 @@ public class BlueLightSpecial implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "green_fluorescent_light"), GREEN_FLUORESCENT_LIGHT_ITEM);
         Registry.register(Registry.ITEM, new Identifier(MODID, "red_fluorescent_light"), RED_FLUORESCENT_LIGHT_ITEM);
         Registry.register(Registry.ITEM, new Identifier(MODID, "black_fluorescent_light"), BLACK_FLUORESCENT_LIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "fluorescent_tube"), FLUORESCENT_TUBE_ITEM);
     }
 
     static {
@@ -119,6 +123,12 @@ public class BlueLightSpecial implements ModInitializer {
         RED_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.RED, lightSettings);
         BLACK_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.BLACK, lightSettings);
 
+        Block.Settings tubeSettings = FabricBlockSettings.of(Material.GLASS)
+            .sounds(BlockSoundGroup.STONE)
+            .noCollision()
+            .build();
+        FLUORESCENT_TUBE = new FluorescentLightBlock(DyeColor.BLACK, tubeSettings);
+
         Item.Settings lightItemSettings = new Item.Settings()
             .itemGroup(ItemGroup.REDSTONE);
         WHITE_FLUORESCENT_LIGHT_ITEM = new BlockItem(WHITE_FLUORESCENT_LIGHT, lightItemSettings);
@@ -137,5 +147,6 @@ public class BlueLightSpecial implements ModInitializer {
         GREEN_FLUORESCENT_LIGHT_ITEM = new BlockItem(GREEN_FLUORESCENT_LIGHT, lightItemSettings);
         RED_FLUORESCENT_LIGHT_ITEM = new BlockItem(RED_FLUORESCENT_LIGHT, lightItemSettings);
         BLACK_FLUORESCENT_LIGHT_ITEM = new BlockItem(BLACK_FLUORESCENT_LIGHT, lightItemSettings);
+        FLUORESCENT_TUBE_ITEM = new BlockItem(FLUORESCENT_TUBE, lightItemSettings);
     }
 }
