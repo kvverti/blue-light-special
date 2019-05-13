@@ -124,12 +124,15 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
             return Blocks.AIR.getDefaultState();
         }
         Direction attach = self.get(ATTACH);
-        if(neighbor.getBlock() instanceof FluorescentPowerSource) {
-            FluorescentPowerSource src = (FluorescentPowerSource)neighbor.getBlock();
-            boolean connected = src.canConnect(neighbor, world, neighborPos, dir.getOpposite(), attach);
-            self = self.with(getRelativeDirection(self, dir), connected);
-        } else {
-            self = self.with(getRelativeDirection(self, dir), false);
+        if(attach != dir && attach != dir.getOpposite()) {
+            RelativeDirection rel = RelativeDirection.getRelativeDirection(attach, dir);
+            if(neighbor.getBlock() instanceof FluorescentPowerSource) {
+                FluorescentPowerSource src = (FluorescentPowerSource)neighbor.getBlock();
+                boolean connected = src.canConnect(neighbor, world, neighborPos, attach, rel.opposite());
+                self = self.with(getConnectionProperty(rel), connected);
+            } else {
+                self = self.with(getConnectionProperty(rel), false);
+            }
         }
         return self;
     }
@@ -153,11 +156,11 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
     }
 
     @Override
-    public int getPowerLevel(BlockState state, ViewableWorld world, BlockPos pos, Direction side, Direction offset) {
+    public int getPowerLevel(BlockState state, ViewableWorld world, BlockPos pos, Direction offset, RelativeDirection side) {
         if(state.get(ATTACH) != offset) {
             return 0;
         }
-        Property<Boolean> relativeSide = getRelativeDirection(state, side);
+        Property<Boolean> relativeSide = getConnectionProperty(side);
         if(state.get(relativeSide)) {
             return state.get(POWER);
         } else {
@@ -166,31 +169,19 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
     }
 
     @Override
-    public boolean canConnect(BlockState state, ViewableWorld world, BlockPos pos, Direction side, Direction attach) {
+    public boolean canConnect(BlockState state, ViewableWorld world, BlockPos pos, Direction attach, RelativeDirection side) {
         Direction base = state.get(ATTACH);
-        return base == attach && side != base && side != base.getOpposite();
+        return base == attach;
     }
 
-    private static final Property<?>[][] PROPERTY_TABLE = {
-        /*            DOWN  UP    NORTH SOUTH WEST  EAST */
-        /* DOWN */  { null, null, FORE, BACK, LEFT, RIGHT },
-        /* UP */    { null, null, BACK, FORE, LEFT, RIGHT },
-        /* NORTH */ { BACK, FORE, null, null, LEFT, RIGHT },
-        /* SOUTH */ { BACK, FORE, null, null, RIGHT, LEFT },
-        /* WEST */  { BACK, FORE, RIGHT, LEFT, null, null },
-        /* EAST */  { BACK, FORE, LEFT, RIGHT, null, null }
-    };
+    private static final Property<?>[] PROPERTIES = { BACK, FORE, LEFT, RIGHT };
 
     /**
-     * Converts the given direction into a relative direction property
-     * based on this state's attachment.
+     * Converts the given direction into a relative direction property.
      */
-    private Property<Boolean> getRelativeDirection(BlockState state, Direction dir) {
+    private Property<Boolean> getConnectionProperty(RelativeDirection dir) {
         @SuppressWarnings("unchecked")
-        Property<Boolean> ret = (Property<Boolean>)PROPERTY_TABLE[state.get(ATTACH).getId()][dir.getId()];
-        if(ret == null) {
-            throw new IllegalArgumentException("Invalid direction: " + dir);
-        }
+        Property<Boolean> ret = (Property<Boolean>)PROPERTIES[dir.id()];
         return ret;
     }
 
@@ -213,8 +204,9 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
             BlockState offsetState = world.getBlockState(offset);
             power = Math.max(power, world.getEmittedRedstonePower(offset, dir));
             if(offsetState.getBlock() instanceof FluorescentPowerSource) {
+                RelativeDirection rel = RelativeDirection.getRelativeDirection(attach, dir);
                 power = Math.max(power, ((FluorescentPowerSource)offsetState.getBlock())
-                    .getPowerLevel(offsetState, world, offset, dir.getOpposite(), attach) - 1);
+                    .getPowerLevel(offsetState, world, offset, attach, rel.opposite()) - 1);
             }
         }
         return power;
