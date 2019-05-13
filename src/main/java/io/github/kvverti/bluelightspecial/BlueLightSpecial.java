@@ -1,6 +1,7 @@
 package io.github.kvverti.bluelightspecial;
 
 import io.github.kvverti.bluelightspecial.block.FluorescentLightBlock;
+import io.github.kvverti.bluelightspecial.block.FluorescentRepeaterBlock;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
@@ -38,6 +39,7 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Block RED_FLUORESCENT_LIGHT;
     public static final Block BLACK_FLUORESCENT_LIGHT;
     public static final Block FLUORESCENT_TUBE;
+    public static final Block FLUORESCENT_REPEATER;
 
     // custom items
 
@@ -58,6 +60,7 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Item RED_FLUORESCENT_LIGHT_ITEM;
     public static final Item BLACK_FLUORESCENT_LIGHT_ITEM;
     public static final Item FLUORESCENT_TUBE_ITEM;
+    public static final Item FLUORESCENT_REPEATER_ITEM;
 
     @Override
     public void onInitialize() {
@@ -79,6 +82,7 @@ public class BlueLightSpecial implements ModInitializer {
         Registry.register(Registry.BLOCK, new Identifier(MODID, "red_fluorescent_light"), RED_FLUORESCENT_LIGHT);
         Registry.register(Registry.BLOCK, new Identifier(MODID, "black_fluorescent_light"), BLACK_FLUORESCENT_LIGHT);
         Registry.register(Registry.BLOCK, new Identifier(MODID, "fluorescent_tube"), FLUORESCENT_TUBE);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "fluorescent_repeater"), FLUORESCENT_REPEATER);
 
         // items
         Registry.register(Registry.ITEM, new Identifier(MODID, "white_fluorescent_light"), WHITE_FLUORESCENT_LIGHT_ITEM);
@@ -98,6 +102,7 @@ public class BlueLightSpecial implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "red_fluorescent_light"), RED_FLUORESCENT_LIGHT_ITEM);
         Registry.register(Registry.ITEM, new Identifier(MODID, "black_fluorescent_light"), BLACK_FLUORESCENT_LIGHT_ITEM);
         Registry.register(Registry.ITEM, new Identifier(MODID, "fluorescent_tube"), FLUORESCENT_TUBE_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "fluorescent_repeater"), FLUORESCENT_REPEATER_ITEM);
     }
 
     static {
@@ -128,6 +133,7 @@ public class BlueLightSpecial implements ModInitializer {
             .noCollision()
             .build();
         FLUORESCENT_TUBE = new FluorescentLightBlock(DyeColor.BLACK, tubeSettings);
+        FLUORESCENT_REPEATER = new FluorescentRepeaterBlock(tubeSettings);
 
         Item.Settings lightItemSettings = new Item.Settings()
             .itemGroup(ItemGroup.REDSTONE);
@@ -148,5 +154,6 @@ public class BlueLightSpecial implements ModInitializer {
         RED_FLUORESCENT_LIGHT_ITEM = new BlockItem(RED_FLUORESCENT_LIGHT, lightItemSettings);
         BLACK_FLUORESCENT_LIGHT_ITEM = new BlockItem(BLACK_FLUORESCENT_LIGHT, lightItemSettings);
         FLUORESCENT_TUBE_ITEM = new BlockItem(FLUORESCENT_TUBE, lightItemSettings);
+        FLUORESCENT_REPEATER_ITEM = new BlockItem(FLUORESCENT_REPEATER, lightItemSettings);
     }
 }
