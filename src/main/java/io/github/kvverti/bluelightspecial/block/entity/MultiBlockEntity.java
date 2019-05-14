@@ -1,5 +1,6 @@
 package io.github.kvverti.bluelightspecial.block.entity;
 
+import net.minecraft.block.BlockEntityProvider;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
@@ -9,9 +10,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.network.packet.BlockEntityUpdateS2CPacket;
 import net.minecraft.command.arguments.BlockStateArgumentType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -22,7 +25,7 @@ import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-public class MultiBlockEntity extends BlockEntity {
+public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
 
     private static final Logger log = LogManager.getLogger(MultiBlockEntity.class);
     private static final BlockStateArgumentType blockStateParser = BlockStateArgumentType.create();
@@ -35,16 +38,6 @@ public class MultiBlockEntity extends BlockEntity {
 
     public Set<BlockState> getBlockStates() {
         return Collections.unmodifiableSet(containedStates);
-    }
-
-    @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-       return new BlockEntityUpdateS2CPacket(this.pos, 6, toInitialChunkDataTag());
-    }
-
-    @Override
-    public CompoundTag toInitialChunkDataTag() {
-       return toTag(new CompoundTag());
     }
 
     @Override
@@ -66,14 +59,29 @@ public class MultiBlockEntity extends BlockEntity {
         for(int i = 0; i < states.size(); i++) {
             String str = states.getString(i);
             StringReader reader = new StringReader(str);
-            BlockState state;
             try {
-                state = blockStateParser.parse(reader).getBlockState();
-                containedStates.add(state);
+                BlockState state = blockStateParser.parse(reader).getBlockState();
+                if(state.getRenderType() != BlockRenderType.MODEL) {
+                    log.warn("Non-model render types are not supported in bls:multiblock");
+                } else if(state.getBlock() instanceof BlockEntityProvider) {
+                    log.warn("Block entities are not supported in bls:multiblock");
+                } else {
+                    containedStates.add(state);
+                }
             } catch(CommandSyntaxException e) {
                 log.error("Could not parse block state string: " + str);
             }
         }
+    }
+
+    @Override
+    public CompoundTag toClientTag(CompoundTag tag) {
+        return toTag(tag);
+    }
+
+    @Override
+    public void fromClientTag(CompoundTag tag) {
+        fromTag(tag);
     }
 
     private StringTag serialize(BlockState state) {

@@ -20,6 +20,9 @@
   "entrypoints": {
     "main": [
       "io.github.kvverti.bluelightspecial.BlueLightSpecial"
+    ],
+    "client": [
+      "io.github.kvverti.bluelightspecial.BlueLightSpecialClient"
     ]
   },
 
