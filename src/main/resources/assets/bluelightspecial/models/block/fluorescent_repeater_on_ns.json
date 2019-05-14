@@ -1,0 +1,6 @@
+{
+    "parent": "bluelightspecial:block/fluorescent_repeater_ns",
+    "textures": {
+        "top": "bluelightspecial:block/fluorescent_repeater_on"
+    }
+}

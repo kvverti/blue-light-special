@@ -1,0 +1,22 @@
+{
+    "parent": "bluelightspecial:block/fluorescent_light_inventory",
+    "ambientocclusion": false,
+    "textures": {
+        "particle": "#top",
+        "base": "bluelightspecial:block/fluorescent_light_base"
+    },
+    "elements": [
+        {
+            "from": [0, 0, 7],
+            "to": [16, 2, 9],
+            "faces": {
+                "down": { "texture": "#base" },
+                "up": { "texture": "#top" },
+                "north": { "texture": "#top", "uv": [16, 14, 0, 16] },
+                "south": { "texture": "#top" },
+                "west": { "texture": "#top", "cullface": "west" },
+                "east": { "texture": "#top", "cullface": "east" }
+            }
+        }
+    ]
+}
