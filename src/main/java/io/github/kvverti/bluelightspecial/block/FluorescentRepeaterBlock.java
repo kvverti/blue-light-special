@@ -8,6 +8,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.EnumProperty;
@@ -16,6 +17,8 @@ import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
@@ -25,6 +28,9 @@ public class FluorescentRepeaterBlock extends Block implements FluorescentPowerS
     public static final Property<Direction> ATTACH = FluorescentLightBlock.ATTACH;
     public static final Property<RelativeDirection> FACING = EnumProperty.create("facing", RelativeDirection.class);
     public static final Property<Boolean> POWERED = Properties.POWERED;
+
+    // each element is of { BACK/FORE, LEFT/RIGHT }
+    private static final VoxelShape[][] BBS_TABLE;
 
     public FluorescentRepeaterBlock(Block.Settings settings) {
         super(settings);
@@ -107,6 +113,11 @@ public class FluorescentRepeaterBlock extends Block implements FluorescentPowerS
     }
 
     @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, EntityContext ctx) {
+        return BBS_TABLE[state.get(ATTACH).getId()][state.get(FACING).id() / 2];
+    }
+
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState self, Direction dir, BlockState neighbor, IWorld world, BlockPos selfPos, BlockPos neighborPos) {
         // detach if mount is removed
         if(!canPlaceAt(self, world, selfPos)) {
@@ -150,5 +161,36 @@ public class FluorescentRepeaterBlock extends Block implements FluorescentPowerS
     public boolean canConnect(BlockState state, ViewableWorld world, BlockPos pos, Direction attach, RelativeDirection side) {
         RelativeDirection facing = state.get(FACING);
         return state.get(ATTACH) == attach && (facing == side || facing.opposite() == side);
+    }
+
+    static {
+        // each element is of { BACK/FORE, LEFT/RIGHT }
+        VoxelShape[][] bbsTable = {
+            /* DOWN */ {
+                Block.createCuboidShape(7.0, 0.0, 0.0, 9.0, 2.0, 16.0),
+                Block.createCuboidShape(0.0, 0.0, 7.0, 16.0, 2.0, 9.0)
+            },
+            /* UP */ {
+                Block.createCuboidShape(7.0, 14.0, 0.0, 9.0, 16.0, 16.0),
+                Block.createCuboidShape(0.0, 14.0, 7.0, 16.0, 16.0, 9.0)
+            },
+            /* NORTH */ {
+                Block.createCuboidShape(7.0, 0.0, 0.0, 9.0, 16.0, 2.0),
+                Block.createCuboidShape(0.0, 7.0, 0.0, 16.0, 9.0, 2.0)
+            },
+            /* SOUTH */ {
+                Block.createCuboidShape(7.0, 0.0, 14.0, 9.0, 16.0, 16.0),
+                Block.createCuboidShape(0.0, 7.0, 14.0, 16.0, 9.0, 16.0)
+            },
+            /* WEST */ {
+                Block.createCuboidShape(0.0, 0.0, 7.0, 2.0, 16.0, 9.0),
+                Block.createCuboidShape(0.0, 7.0, 0.0, 2.0, 9.0, 16.0)
+            },
+            /* EAST */ {
+                Block.createCuboidShape(14.0, 0.0, 7.0, 16.0, 16.0, 9.0),
+                Block.createCuboidShape(14.0, 7.0, 0.0, 16.0, 9.0, 16.0)
+            }
+        };
+        BBS_TABLE = bbsTable;
     }
 }
