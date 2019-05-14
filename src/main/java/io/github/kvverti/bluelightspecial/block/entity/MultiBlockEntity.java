@@ -5,11 +5,13 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import io.github.kvverti.bluelightspecial.BlueLightSpecial;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.network.packet.BlockEntityUpdateS2CPacket;
 import net.minecraft.command.arguments.BlockStateArgumentType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -29,6 +31,20 @@ public class MultiBlockEntity extends BlockEntity {
 
     public MultiBlockEntity() {
         super(BlueLightSpecial.MULTI_BLOCK_ENTITY);
+    }
+
+    public Set<BlockState> getBlockStates() {
+        return Collections.unmodifiableSet(containedStates);
+    }
+
+    @Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+       return new BlockEntityUpdateS2CPacket(this.pos, 6, toInitialChunkDataTag());
+    }
+
+    @Override
+    public CompoundTag toInitialChunkDataTag() {
+       return toTag(new CompoundTag());
     }
 
     @Override
@@ -63,14 +79,17 @@ public class MultiBlockEntity extends BlockEntity {
     private StringTag serialize(BlockState state) {
         StringBuilder sb = new StringBuilder();
         String blockId = Registry.BLOCK.getId(state.getBlock()).toString();
-        sb.append(blockId).append('[');
-        for(Property<?> prop : state.getProperties()) {
-            sb.append(prop.getName())
-                .append('=')
-                .append(getPropStringValue(state, prop))
-                .append(',');
+        sb.append(blockId);
+        if(!state.getProperties().isEmpty()) {
+            sb.append('[');
+            for(Property<?> prop : state.getProperties()) {
+                sb.append(prop.getName())
+                    .append('=')
+                    .append(getPropStringValue(state, prop))
+                    .append(',');
+            }
+            sb.setCharAt(sb.length() - 1, ']');
         }
-        sb.setCharAt(sb.length() - 1, ']');
         return new StringTag(sb.toString());
     }
 
