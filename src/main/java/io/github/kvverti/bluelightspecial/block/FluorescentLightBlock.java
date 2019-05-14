@@ -111,11 +111,27 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        if(!ctx.getWorld().isClient()) {
+        World world = ctx.getWorld();
+        if(!world.isClient()) {
             // properly set power value once connections are set up
-            ctx.getWorld().getBlockTickScheduler().schedule(ctx.getBlockPos(), this, 1);
+            world.getBlockTickScheduler().schedule(ctx.getBlockPos(), this, 1);
         }
-        return getDefaultState().with(ATTACH, ctx.getFacing().getOpposite());
+        Direction attach =  ctx.getFacing().getOpposite();
+        BlockState state = getDefaultState().with(ATTACH, attach);
+        // determine initial connections
+        for(Direction dir : SIDE_DIRECTIONS[attach.getId() / 2]) {
+            BlockPos pos = ctx.getBlockPos().offset(dir);
+            RelativeDirection rel = RelativeDirection.getRelativeDirection(attach, dir);
+            if(world.getBlockState(pos).getBlock() instanceof FluorescentPowerSource) {
+                BlockState neighbor = world.getBlockState(pos);
+                FluorescentPowerSource src = (FluorescentPowerSource)neighbor.getBlock();
+                boolean connect = src.canConnect(neighbor, world, pos, attach, rel);
+                state = state.with(getConnectionProperty(rel), connect);
+            } else {
+                state = state.with(getConnectionProperty(rel), false);
+            }
+        }
+        return state;
     }
 
     @Override
