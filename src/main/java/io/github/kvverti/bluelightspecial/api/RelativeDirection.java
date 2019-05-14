@@ -62,4 +62,14 @@ public enum RelativeDirection implements StringIdentifiable {
         }
         return ret;
     }
+
+    public static Direction getDirection(Direction base, RelativeDirection rel) {
+        RelativeDirection[] relatives = DIRECTION_LOOKUP[base.getId()];
+        for(int i = 0; i < relatives.length; i++) {
+            if(relatives[i] == rel) {
+                return Direction.byId(i);
+            }
+        }
+        throw new AssertionError(String.format("Failed direction pair: (%s, %s) - this should not happen", base, rel));
+    }
 }

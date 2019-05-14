@@ -3,6 +3,8 @@ package io.github.kvverti.bluelightspecial.block;
 import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
 import io.github.kvverti.bluelightspecial.api.RelativeDirection;
 
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
@@ -16,6 +18,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.ViewableWorld;
+import net.minecraft.world.World;
 
 public class FluorescentRepeaterBlock extends Block implements FluorescentPowerSource {
 
@@ -109,7 +112,29 @@ public class FluorescentRepeaterBlock extends Block implements FluorescentPowerS
         if(!canPlaceAt(self, world, selfPos)) {
             return Blocks.AIR.getDefaultState();
         }
+        if(!world.isClient()) {
+            // two tick delay for power updating
+            world.getBlockTickScheduler().schedule(selfPos, this, 2);
+        }
         return self;
+    }
+
+    @Override
+    public void onScheduledTick(BlockState state, World world, BlockPos pos, Random rand) {
+        // update light power level
+        if(!world.isClient()) {
+            RelativeDirection facing = state.get(FACING);
+            Direction attach = state.get(ATTACH);
+            Direction absoluteFacing = RelativeDirection.getDirection(attach, facing);
+            BlockPos offset = pos.offset(absoluteFacing.getOpposite());
+            BlockState offsetState = world.getBlockState(offset);
+            boolean powered = world.isEmittingRedstonePower(offset, absoluteFacing.getOpposite());
+            if(offsetState.getBlock() instanceof FluorescentPowerSource) {
+                FluorescentPowerSource src = (FluorescentPowerSource)offsetState.getBlock();
+                powered |= src.getPowerLevel(offsetState, world, offset, attach, facing) > 0;
+            }
+            world.setBlockState(pos, state.with(POWERED, powered));
+        }
     }
 
     @Override
