@@ -15,5 +15,6 @@
     "block.bluelightspecial.magenta_fluorescent_light": "Magenta Fluorescent Light",
     "block.bluelightspecial.orange_fluorescent_light": "Orange Fluorescent Light",
     "block.bluelightspecial.white_fluorescent_light": "White Fluorescent Light",
-    "block.bluelightspecial.fluorescent_tube": "Fluorescent Tubing"
+    "block.bluelightspecial.fluorescent_tube": "Fluorescent Tubing",
+    "block.bluelightspecial.fluorescent_repeater": "Fluorescent Repeater"
 }
