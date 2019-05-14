@@ -1,6 +1,7 @@
 package io.github.kvverti.bluelightspecial.block;
 
 import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
+import io.github.kvverti.bluelightspecial.api.RelativeDirection;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
