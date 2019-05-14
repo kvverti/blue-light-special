@@ -63,6 +63,10 @@ public enum RelativeDirection implements StringIdentifiable {
         return ret;
     }
 
+    /**
+     * Converts the given relative direction into a (absolute) direction
+     * based on a base direction.
+     */
     public static Direction getDirection(Direction base, RelativeDirection rel) {
         RelativeDirection[] relatives = DIRECTION_LOOKUP[base.getId()];
         for(int i = 0; i < relatives.length; i++) {
