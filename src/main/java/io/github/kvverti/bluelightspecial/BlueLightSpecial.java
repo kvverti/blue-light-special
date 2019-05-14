@@ -2,12 +2,15 @@ package io.github.kvverti.bluelightspecial;
 
 import io.github.kvverti.bluelightspecial.block.FluorescentLightBlock;
 import io.github.kvverti.bluelightspecial.block.FluorescentRepeaterBlock;
+import io.github.kvverti.bluelightspecial.block.MultiBlock;
+import io.github.kvverti.bluelightspecial.block.entity.MultiBlockEntity;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -40,6 +43,7 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Block BLACK_FLUORESCENT_LIGHT;
     public static final Block FLUORESCENT_TUBE;
     public static final Block FLUORESCENT_REPEATER;
+    public static final Block MULTIBLOCK;
 
     // custom items
 
@@ -62,6 +66,9 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Item FLUORESCENT_TUBE_ITEM;
     public static final Item FLUORESCENT_REPEATER_ITEM;
 
+    // custom block entities
+    public static final BlockEntityType<MultiBlockEntity> MULTI_BLOCK_ENTITY;
+
     @Override
     public void onInitialize() {
         // blocks
@@ -83,6 +90,7 @@ public class BlueLightSpecial implements ModInitializer {
         Registry.register(Registry.BLOCK, new Identifier(MODID, "black_fluorescent_light"), BLACK_FLUORESCENT_LIGHT);
         Registry.register(Registry.BLOCK, new Identifier(MODID, "fluorescent_tube"), FLUORESCENT_TUBE);
         Registry.register(Registry.BLOCK, new Identifier(MODID, "fluorescent_repeater"), FLUORESCENT_REPEATER);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "multiblock"), MULTIBLOCK);
 
         // items
         Registry.register(Registry.ITEM, new Identifier(MODID, "white_fluorescent_light"), WHITE_FLUORESCENT_LIGHT_ITEM);
@@ -103,6 +111,9 @@ public class BlueLightSpecial implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "black_fluorescent_light"), BLACK_FLUORESCENT_LIGHT_ITEM);
         Registry.register(Registry.ITEM, new Identifier(MODID, "fluorescent_tube"), FLUORESCENT_TUBE_ITEM);
         Registry.register(Registry.ITEM, new Identifier(MODID, "fluorescent_repeater"), FLUORESCENT_REPEATER_ITEM);
+
+        // block entities
+        Registry.register(Registry.BLOCK_ENTITY, new Identifier(MODID, "multiblock"), MULTI_BLOCK_ENTITY);
     }
 
     static {
@@ -134,6 +145,7 @@ public class BlueLightSpecial implements ModInitializer {
             .build();
         FLUORESCENT_TUBE = new FluorescentLightBlock(DyeColor.BLACK, tubeSettings);
         FLUORESCENT_REPEATER = new FluorescentRepeaterBlock(tubeSettings);
+        MULTIBLOCK = new MultiBlock(tubeSettings);
 
         Item.Settings lightItemSettings = new Item.Settings()
             .itemGroup(ItemGroup.REDSTONE);
@@ -155,5 +167,9 @@ public class BlueLightSpecial implements ModInitializer {
         BLACK_FLUORESCENT_LIGHT_ITEM = new BlockItem(BLACK_FLUORESCENT_LIGHT, lightItemSettings);
         FLUORESCENT_TUBE_ITEM = new BlockItem(FLUORESCENT_TUBE, lightItemSettings);
         FLUORESCENT_REPEATER_ITEM = new BlockItem(FLUORESCENT_REPEATER, lightItemSettings);
+
+        MULTI_BLOCK_ENTITY = BlockEntityType.Builder
+            .create(MultiBlockEntity::new, MULTIBLOCK)
+            .build(null);
     }
 }
