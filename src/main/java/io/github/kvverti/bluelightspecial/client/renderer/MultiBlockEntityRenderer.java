@@ -33,11 +33,11 @@ public class MultiBlockEntityRenderer extends BlockEntityRenderer<MultiBlockEnti
         World world = this.getWorld();
         BlockPos pos = blockEntity.getPos();
         this.bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
+        GlStateManager.pushMatrix();
         GlStateManager.translated(x - pos.getX(), y - pos.getY(), z - pos.getZ());
         for(BlockState state : blockEntity.getBlockStates()) {
             assert state.getRenderType() == BlockRenderType.MODEL : state.getRenderType();
             boolean translucent = state.getBlock().getRenderLayer() == BlockRenderLayer.TRANSLUCENT;
-            GlStateManager.pushMatrix();
             if(translucent) {
                 GlStateManager.enableNormalize();
                 GlStateManager.enableBlend();
@@ -53,7 +53,7 @@ public class MultiBlockEntityRenderer extends BlockEntityRenderer<MultiBlockEnti
                 GlStateManager.disableBlend();
                 GlStateManager.disableNormalize();
             }
-            GlStateManager.popMatrix();
         }
+        GlStateManager.popMatrix();
     }
 }
