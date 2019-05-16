@@ -102,7 +102,9 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
         BlockEntity be = world.getBlockEntity(pos);
         if(be instanceof MultiBlockEntity) {
             MultiBlockEntity multiblock = (MultiBlockEntity)be;
-            boolean toggle = multiblock.placeStack(player, hand, ctx);
+            // adjust the position to this block instead
+            BlockHitResult modified = new BlockHitResult(ctx.getPos(), ctx.getSide(), pos.offset(ctx.getSide().getOpposite()), ctx.method_17781());
+            boolean toggle = multiblock.placeStack(player, hand, modified);
             int parity = state.get(PARITY) ^ (toggle ? 1 : 0);
             world.setBlockState(pos, state.with(PARITY, parity));
         }

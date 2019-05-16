@@ -1,6 +1,8 @@
 package io.github.kvverti.bluelightspecial.block.entity;
 
-import com.google.common.collect.ForwardingSet;
+import java.util.HashMap;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.EnumMap;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -9,13 +11,10 @@ import io.github.kvverti.bluelightspecial.BlueLightSpecial;
 import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
 import io.github.kvverti.bluelightspecial.api.RelativeDirection;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -35,7 +34,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Property;
@@ -56,13 +54,36 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
     private static final BlockStateArgumentType blockStateParser = BlockStateArgumentType.create();
     private static final Map<World, ForwardingWorld> levelMap = new IdentityHashMap<>();
 
-    private final Set<BlockState> containedStates;
-    private final SortedMap<Integer, Set<BlockState>> upcomingTicks = new TreeMap<>();
-    private BlockState currentIteratingState;
+    private final Map<Direction, BlockState> containedStates;
+    private final SortedMap<Integer, Map<Direction, BlockState>> upcomingTicks = new TreeMap<>();
+    private Map.Entry<Direction, BlockState> currentIteratingEntry;
+    private boolean stateUpdated;
 
     public MultiBlockEntity() {
         super(BlueLightSpecial.MULTI_BLOCK_ENTITY);
-        containedStates = new BlockStateSet(new HashSet<>());
+        containedStates = new EnumMap<>(Direction.class);
+    }
+
+    /**
+     * Queries whether a contained block state was updated. Calling this
+     * method clears the state update flag.
+     */
+    private boolean stateUpdated() {
+        boolean updated = stateUpdated;
+        stateUpdated = false;
+        return updated;
+    }
+
+    private boolean addContainedState(Direction dir, BlockState state) {
+        boolean changed = false;
+        if(state.getRenderType() != BlockRenderType.MODEL) {
+            log.warn("Ignored multiblock state with non-model render type");
+        } else if(state.getBlock() instanceof BlockEntityProvider) {
+            log.warn("Ignored multiblock state with block entity");
+        } else if(containedStates.put(dir, state) != state) {
+            changed = true;
+        }
+        return changed;
     }
 
     @Override
@@ -71,16 +92,16 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
         levelMap.computeIfAbsent(world, ForwardingWorld::new);
     }
 
-    public Set<BlockState> getBlockStates() {
-        return Collections.unmodifiableSet(containedStates);
+    public Iterable<BlockState> getBlockStates() {
+        return Collections.unmodifiableCollection(containedStates.values());
     }
 
     /**
      * Attempts to add the given block state to this block entity.
      * @return whether the block state was added
      */
-    public boolean addBlockState(BlockState state) {
-        boolean changed = containedStates.add(state);
+    public boolean addBlockState(Direction dir, BlockState state) {
+        boolean changed = addContainedState(dir, state);
         if(changed) {
             this.markDirty();
         }
@@ -95,9 +116,13 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
      * changes.
      */
     boolean setBlockState(BlockState state, int flags) {
-        boolean changed = containedStates.add(state);
+        if(currentIteratingEntry == null) {
+            throw new IllegalStateException("Cannot set block state from null");
+        }
+        boolean changed = addContainedState(currentIteratingEntry.getKey(), state);
         if(changed) {
             this.markDirty();
+            stateUpdated = true;
         }
         return changed;
     }
@@ -108,13 +133,14 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
      * which block state scheduled a block tick update.
      */
     void addTick(int ticks) {
-        BlockState state = currentIteratingState;
-        if(state == null) {
+        if(currentIteratingEntry == null) {
             throw new IllegalStateException("Cannot add tick with null state");
         }
+        Direction dir = currentIteratingEntry.getKey();
+        BlockState state = currentIteratingEntry.getValue();
         upcomingTicks.compute(ticks, (k, v) -> {
-            if(v == null) { v = new HashSet<>(); }
-            v.add(state);
+            if(v == null) { v = new HashMap<>(); }
+            v.put(dir, state);
             return v;
         });
     }
@@ -126,10 +152,8 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
      * in order to update the state.
      */
     private void patchTickStates(BlockState oldState, BlockState newState) {
-        for(Set<BlockState> toTick : upcomingTicks.values()) {
-            if(toTick.remove(oldState)) {
-                toTick.add(newState);
-            }
+        for(Map<Direction, BlockState> toTick : upcomingTicks.values()) {
+            toTick.replaceAll((k, v) -> v == oldState ? newState : v);
         }
     }
 
@@ -137,18 +161,24 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
      * Places the given item into this block entity, as if placed into the world.
      */
     public boolean placeStack(PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+        // do not replace already present states
+        if(containedStates.containsKey(hitResult.getSide())) {
+            return false;
+        }
+        ForwardingWorld forwardWorld = levelMap.get(this.world);
+        forwardWorld.setCurrentMulti(this);
         ItemUsageContext ctx =
-            new ForwardingItemUsageContext(levelMap.get(this.world), player, hand, hitResult);
+            new ForwardingItemUsageContext(forwardWorld, player, hand, hitResult);
         Block block = Block.getBlockFromItem(ctx.getItemStack().getItem());
         if(block != Blocks.AIR) {
             // we don't have the state yet, and worse, we don't have an old state
             // to use, so we set the current iterating state to AIR
-            currentIteratingState = Blocks.AIR.getDefaultState();
+            currentIteratingEntry = new SimpleEntry<>(ctx.getFacing(), Blocks.AIR.getDefaultState());
             BlockState state = block.getPlacementState(new ItemPlacementContext(ctx));
             patchTickStates(Blocks.AIR.getDefaultState(), state);
             boolean canPlace = block.canPlaceAt(state, this.world, this.pos);
-            boolean changed = canPlace && addBlockState(state);
-            currentIteratingState = null;
+            boolean changed = canPlace && addBlockState(ctx.getFacing(), state);
+            currentIteratingEntry = null;
             if(changed && (player instanceof ServerPlayerEntity)) {
                 GameMode mode = ((ServerPlayerEntity)player).interactionManager.getGameMode();
                 if(mode.isSurvivalLike()) {
@@ -162,7 +192,7 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
 
     public int getPowerLevel(Direction attach, RelativeDirection side) {
         int power = 0;
-        for(BlockState state : containedStates) {
+        for(BlockState state : containedStates.values()) {
             if(state.getBlock() instanceof FluorescentPowerSource) {
                 FluorescentPowerSource src = (FluorescentPowerSource)state.getBlock();
                 power = Math.max(power, src.getPowerLevel(state, this.world, this.pos, attach, side));
@@ -172,7 +202,7 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
     }
 
     public boolean canConnect(Direction attach, RelativeDirection side) {
-        for(BlockState state : containedStates) {
+        for(BlockState state : containedStates.values()) {
             if(state.getBlock() instanceof FluorescentPowerSource) {
                 FluorescentPowerSource src = (FluorescentPowerSource)state.getBlock();
                 if(src.canConnect(state, this.world, this.pos, attach, side)) {
@@ -187,22 +217,25 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
      * Set block states based on neighbor update.
      */
     public boolean getStateForNeighborUpdate(Direction dir, BlockState neighbor, BlockPos neighborPos) {
-        List<BlockState> newStates = new ArrayList<>(containedStates.size());
+        Map<Direction, BlockState> newStates = new HashMap<>();
         ForwardingWorld forwardWorld = levelMap.get(this.world);
         forwardWorld.setCurrentMulti(this);
         boolean dirty = false;
-        for(Iterator<BlockState> itr = containedStates.iterator(); itr.hasNext(); ) {
-            BlockState state = currentIteratingState = itr.next();
+        for(Iterator<Map.Entry<Direction, BlockState>> itr = containedStates.entrySet().iterator(); itr.hasNext(); ) {
+            currentIteratingEntry = itr.next();
+            BlockState state = currentIteratingEntry.getValue();
             BlockState newState = state.getStateForNeighborUpdate(dir, neighbor, forwardWorld, this.pos, neighborPos);
             if(state != newState) {
                 patchTickStates(state, newState);
-                newStates.add(newState);
+                newStates.put(currentIteratingEntry.getKey(), newState);
                 itr.remove();
                 dirty = true;
             }
         }
-        currentIteratingState = null;
-        containedStates.addAll(newStates);
+        currentIteratingEntry = null;
+        for(Map.Entry<Direction, BlockState> entry : newStates.entrySet()) {
+            addContainedState(entry.getKey(), entry.getValue());
+        }
         if(dirty) {
             this.markDirty();
         }
@@ -214,17 +247,16 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
         ForwardingWorld forwardWorld = levelMap.get(this.world);
         forwardWorld.setCurrentMulti(this);
         boolean dirty = false;
-        Set<BlockState> tmpStates = new HashSet<>(containedStates);
-        int formerSize = containedStates.size();
-        for(BlockState state : tmpStates) {
-            currentIteratingState = state;
+        Set<Map.Entry<Direction, BlockState>> tmpStates = new HashSet<>(containedStates.entrySet());
+        for(Map.Entry<Direction, BlockState> entry : tmpStates) {
+            currentIteratingEntry = entry;
+            BlockState state = entry.getValue();
             state.neighborUpdate(forwardWorld, this.pos, neighbor, neighborPos, false);
-            if(containedStates.size() != formerSize) {
-                containedStates.remove(state);
+            if(stateUpdated()) {
                 dirty = true;
             }
         }
-        currentIteratingState = null;
+        currentIteratingEntry = null;
         if(dirty) {
             this.markDirty();
         }
@@ -243,21 +275,20 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
         // tick the first element states
         boolean dirty = false;
         Integer tick0 = upcomingTicks.firstKey();
-        Set<BlockState> toTick = upcomingTicks.remove(tick0);
-        int formerSize = containedStates.size();
+        Map<Direction, BlockState> toTick = upcomingTicks.remove(tick0);
         ForwardingWorld forwardWorld = levelMap.get(this.world);
         forwardWorld.setCurrentMulti(this);
-        for(BlockState state : toTick) {
-            currentIteratingState = state;
-            if(containedStates.contains(state)) {
+        for(Map.Entry<Direction, BlockState> entry : toTick.entrySet()) {
+            currentIteratingEntry = entry;
+            BlockState state = entry.getValue();
+            if(containedStates.get(entry.getKey()) == state) {
                 state.getBlock().onScheduledTick(state, forwardWorld, this.pos, rand);
-                if(containedStates.size() != formerSize) {
-                    containedStates.remove(state);
+                if(stateUpdated()) {
                     dirty = true;
                 }
             }
         }
-        currentIteratingState = null;
+        currentIteratingEntry = null;
         if(dirty) {
             this.markDirty();
         }
@@ -267,11 +298,13 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         tag = super.toTag(tag);
-        ListTag states = new ListTag();
-        for(BlockState bs : containedStates) {
-            states.add(serialize(bs));
+        CompoundTag states = new CompoundTag();
+        for(Map.Entry<Direction, BlockState> entry : containedStates.entrySet()) {
+            states.put(
+                entry.getKey().getName(),
+                serialize(entry.getValue()));
         }
-        tag.put("States", states);
+        tag.put("StateMap", states);
         return tag;
     }
 
@@ -279,15 +312,17 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
         containedStates.clear();
-        ListTag states = tag.getList("States", 8);
-        for(int i = 0; i < states.size(); i++) {
-            String str = states.getString(i);
-            StringReader reader = new StringReader(str);
-            try {
-                BlockState state = blockStateParser.parse(reader).getBlockState();
-                containedStates.add(state);
-            } catch(CommandSyntaxException e) {
-                log.error("Could not parse block state string: " + str);
+        CompoundTag states = tag.getCompound("StateMap");
+        for(Direction dir : Direction.values()) {
+            if(states.containsKey(dir.getName(), 8)) {
+                String str = states.getString(dir.getName());
+                StringReader reader = new StringReader(str);
+                try {
+                    BlockState state = blockStateParser.parse(reader).getBlockState();
+                    containedStates.put(dir, state);
+                } catch(CommandSyntaxException e) {
+                    log.error("Could not parse block state string: " + str);
+                }
             }
         }
     }
@@ -322,38 +357,4 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
     private <T extends Comparable<T>> String getPropStringValue(BlockState state, Property<T> prop) {
         return prop.getValueAsString(state.get(prop));
     }
-
-    private static class BlockStateSet extends ForwardingSet<BlockState> {
-
-        private final Set<BlockState> delegate;
-
-        BlockStateSet(Set<BlockState> delegate) {
-            this.delegate = delegate;
-        }
-
-        @Override
-        protected Set<BlockState> delegate() { return delegate; }
-
-        @Override
-        public boolean add(BlockState state) {
-            boolean changed = false;
-            if(state.getRenderType() != BlockRenderType.MODEL) {
-                log.warn("Ignored multiblock state with non-model render type");
-            } else if(state.getBlock() instanceof BlockEntityProvider) {
-                log.warn("Ignored multiblock state with block entity");
-            } else {
-                changed = delegate.add(state);
-            }
-            return changed;
-        }
-
-        @Override
-        public boolean addAll(Collection<? extends BlockState> collection) {
-            boolean changed = false;
-            for(BlockState state : collection) {
-                changed |= add(state);
-            }
-            return changed;
-        }
-    };
 }
