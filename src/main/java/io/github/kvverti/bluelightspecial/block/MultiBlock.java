@@ -11,9 +11,12 @@ import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.IntegerProperty;
 import net.minecraft.state.property.Property;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -62,7 +65,7 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
         }
         return state;
     }
-    
+
     /**
      * Forwards to block entity for state updates.
      */
@@ -89,6 +92,21 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
                 world.setBlockState(pos, state.with(PARITY, parity));
             }
         }
+    }
+
+    @Override
+    public boolean activate(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult ctx) {
+        if(world.isClient()) {
+            return true;
+        }
+        BlockEntity be = world.getBlockEntity(pos);
+        if(be instanceof MultiBlockEntity) {
+            MultiBlockEntity multiblock = (MultiBlockEntity)be;
+            boolean toggle = multiblock.placeStack(player, hand, ctx);
+            int parity = state.get(PARITY) ^ (toggle ? 1 : 0);
+            world.setBlockState(pos, state.with(PARITY, parity));
+        }
+        return false;
     }
 
     @Override

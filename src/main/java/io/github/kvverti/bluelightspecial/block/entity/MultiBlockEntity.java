@@ -1,5 +1,7 @@
 package io.github.kvverti.bluelightspecial.block.entity;
 
+import com.google.common.collect.ForwardingSet;
+
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
@@ -8,6 +10,7 @@ import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
 import io.github.kvverti.bluelightspecial.api.RelativeDirection;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
@@ -22,18 +25,26 @@ import java.util.TreeMap;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.command.arguments.BlockStateArgumentType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Property;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 
 import org.apache.logging.log4j.Logger;
@@ -45,12 +56,13 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
     private static final BlockStateArgumentType blockStateParser = BlockStateArgumentType.create();
     private static final Map<World, ForwardingWorld> levelMap = new IdentityHashMap<>();
 
-    private final Set<BlockState> containedStates = new HashSet<>();
+    private final Set<BlockState> containedStates;
     private final SortedMap<Integer, Set<BlockState>> upcomingTicks = new TreeMap<>();
     private BlockState currentIteratingState;
 
     public MultiBlockEntity() {
         super(BlueLightSpecial.MULTI_BLOCK_ENTITY);
+        containedStates = new BlockStateSet(new HashSet<>());
     }
 
     @Override
@@ -64,6 +76,18 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
     }
 
     /**
+     * Attempts to add the given block state to this block entity.
+     * @return whether the block state was added
+     */
+    public boolean addBlockState(BlockState state) {
+        boolean changed = containedStates.add(state);
+        if(changed) {
+            this.markDirty();
+        }
+        return changed;
+    }
+
+    /**
      * Called when one of this block entity's contained states replaces
      * itself by calling {@link World#setBlockState}. Note that this method
      * does <em>not</em> remove the old block state, since the other methods
@@ -71,14 +95,7 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
      * changes.
      */
     boolean setBlockState(BlockState state, int flags) {
-        boolean changed = false;
-        if(state.getRenderType() != BlockRenderType.MODEL) {
-            log.warn("Non-model render types are not supported in bls:multiblock");
-        } else if(state.getBlock() instanceof BlockEntityProvider) {
-            log.warn("Block entities are not supported in bls:multiblock");
-        } else {
-            changed = containedStates.add(state);
-        }
+        boolean changed = containedStates.add(state);
         if(changed) {
             this.markDirty();
         }
@@ -114,6 +131,33 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
                 toTick.add(newState);
             }
         }
+    }
+
+    /**
+     * Places the given item into this block entity, as if placed into the world.
+     */
+    public boolean placeStack(PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+        ItemUsageContext ctx =
+            new ForwardingItemUsageContext(levelMap.get(this.world), player, hand, hitResult);
+        Block block = Block.getBlockFromItem(ctx.getItemStack().getItem());
+        if(block != Blocks.AIR) {
+            // we don't have the state yet, and worse, we don't have an old state
+            // to use, so we set the current iterating state to AIR
+            currentIteratingState = Blocks.AIR.getDefaultState();
+            BlockState state = block.getPlacementState(new ItemPlacementContext(ctx));
+            patchTickStates(Blocks.AIR.getDefaultState(), state);
+            boolean canPlace = block.canPlaceAt(state, this.world, this.pos);
+            boolean changed = canPlace && addBlockState(state);
+            currentIteratingState = null;
+            if(changed && (player instanceof ServerPlayerEntity)) {
+                GameMode mode = ((ServerPlayerEntity)player).interactionManager.getGameMode();
+                if(mode.isSurvivalLike()) {
+                    ctx.getItemStack().subtractAmount(1);
+                }
+            }
+            return changed;
+        }
+        return false;
     }
 
     public int getPowerLevel(Direction attach, RelativeDirection side) {
@@ -241,13 +285,7 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
             StringReader reader = new StringReader(str);
             try {
                 BlockState state = blockStateParser.parse(reader).getBlockState();
-                if(state.getRenderType() != BlockRenderType.MODEL) {
-                    log.warn("Non-model render types are not supported in bls:multiblock");
-                } else if(state.getBlock() instanceof BlockEntityProvider) {
-                    log.warn("Block entities are not supported in bls:multiblock");
-                } else {
-                    containedStates.add(state);
-                }
+                containedStates.add(state);
             } catch(CommandSyntaxException e) {
                 log.error("Could not parse block state string: " + str);
             }
@@ -284,4 +322,38 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
     private <T extends Comparable<T>> String getPropStringValue(BlockState state, Property<T> prop) {
         return prop.getValueAsString(state.get(prop));
     }
+
+    private static class BlockStateSet extends ForwardingSet<BlockState> {
+
+        private final Set<BlockState> delegate;
+
+        BlockStateSet(Set<BlockState> delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        protected Set<BlockState> delegate() { return delegate; }
+
+        @Override
+        public boolean add(BlockState state) {
+            boolean changed = false;
+            if(state.getRenderType() != BlockRenderType.MODEL) {
+                log.warn("Ignored multiblock state with non-model render type");
+            } else if(state.getBlock() instanceof BlockEntityProvider) {
+                log.warn("Ignored multiblock state with block entity");
+            } else {
+                changed = delegate.add(state);
+            }
+            return changed;
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends BlockState> collection) {
+            boolean changed = false;
+            for(BlockState state : collection) {
+                changed |= add(state);
+            }
+            return changed;
+        }
+    };
 }
