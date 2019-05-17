@@ -1,6 +1,8 @@
 package io.github.kvverti.bluelightspecial.block;
 
+import io.github.kvverti.bluelightspecial.block.entity.MultiBlockEntity;
 import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
+import io.github.kvverti.bluelightspecial.api.MultiBlockComponent;
 import io.github.kvverti.bluelightspecial.api.RelativeDirection;
 
 import java.util.HashMap;
@@ -29,7 +31,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
 
-public class FluorescentLightBlock extends Block implements FluorescentPowerSource, ColoredBlock {
+public class FluorescentLightBlock extends Block implements FluorescentPowerSource, MultiBlockComponent, ColoredBlock {
 
     public static final Property<Integer> POWER = IntegerProperty.create("power", 0, 15);
     public static final Property<Direction> ATTACH = DirectionProperty.create("attach", d -> true);
@@ -112,15 +114,12 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         World world = ctx.getWorld();
-        if(!world.isClient()) {
-            // properly set power value once connections are set up
-            world.getBlockTickScheduler().schedule(ctx.getBlockPos(), this, 1);
-        }
+        BlockPos blockPos = ctx.getBlockPos();
         Direction attach =  ctx.getFacing().getOpposite();
         BlockState state = getDefaultState().with(ATTACH, attach);
         // determine initial connections
         for(Direction dir : SIDE_DIRECTIONS[attach.getId() / 2]) {
-            BlockPos pos = ctx.getBlockPos().offset(dir);
+            BlockPos pos = blockPos.offset(dir);
             RelativeDirection rel = RelativeDirection.getRelativeDirection(attach, dir);
             if(world.getBlockState(pos).getBlock() instanceof FluorescentPowerSource) {
                 BlockState neighbor = world.getBlockState(pos);
@@ -131,7 +130,24 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
                 state = state.with(getConnectionProperty(rel), false);
             }
         }
-        return state;
+        if(world.getBlockEntity(blockPos) instanceof MultiBlockEntity) {
+            MultiBlockEntity be = (MultiBlockEntity)world.getBlockEntity(blockPos);
+            boolean added = be.addBlockState(ctx.getFacing(), state);
+            if(added) {
+                if(!world.isClient()) {
+                    be.scheduleTick(ctx.getFacing(), 1);
+                }
+                return MultiBlock.toggle(world.getBlockState(blockPos));
+            } else {
+                return world.getBlockState(blockPos);
+            }
+        } else {
+            if(!world.isClient()) {
+                // properly set power value once connections are set up
+                world.getBlockTickScheduler().schedule(blockPos, this, 1);
+            }
+            return state;
+        }
     }
 
     @Override

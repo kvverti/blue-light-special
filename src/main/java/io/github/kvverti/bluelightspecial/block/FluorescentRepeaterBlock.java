@@ -1,6 +1,8 @@
 package io.github.kvverti.bluelightspecial.block;
 
+import io.github.kvverti.bluelightspecial.block.entity.MultiBlockEntity;
 import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
+import io.github.kvverti.bluelightspecial.api.MultiBlockComponent;
 import io.github.kvverti.bluelightspecial.api.RelativeDirection;
 
 import java.util.Random;
@@ -23,7 +25,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
 
-public class FluorescentRepeaterBlock extends Block implements FluorescentPowerSource {
+public class FluorescentRepeaterBlock extends Block implements FluorescentPowerSource, MultiBlockComponent {
 
     public static final Property<Direction> ATTACH = FluorescentLightBlock.ATTACH;
     public static final Property<RelativeDirection> FACING = EnumProperty.create("facing", RelativeDirection.class);
@@ -54,13 +56,29 @@ public class FluorescentRepeaterBlock extends Block implements FluorescentPowerS
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        if(!ctx.getWorld().isClient()) {
-            // properly set power value once connections are set up
-            ctx.getWorld().getBlockTickScheduler().schedule(ctx.getBlockPos(), this, 1);
-        }
-        return getDefaultState()
+        BlockState state = getDefaultState()
             .with(ATTACH, ctx.getFacing().getOpposite())
             .with(FACING, getPlacementFacing(ctx));
+        World world = ctx.getWorld();
+        BlockPos pos = ctx.getBlockPos();
+        if(world.getBlockEntity(pos) instanceof MultiBlockEntity) {
+            MultiBlockEntity be = (MultiBlockEntity)world.getBlockEntity(pos);
+            boolean placed = be.addBlockState(ctx.getFacing(), state);
+            if(placed) {
+                if(!world.isClient()) {
+                    be.scheduleTick(ctx.getFacing(), 1);
+                }
+                return MultiBlock.toggle(world.getBlockState(pos));
+            } else {
+                return world.getBlockState(pos);
+            }
+        } else {
+            if(!world.isClient()) {
+                // properly set power value once connections are set up
+                world.getBlockTickScheduler().schedule(pos, this, 1);
+            }
+            return state;
+        }
     }
 
     private RelativeDirection getPlacementFacing(ItemPlacementContext ctx) {

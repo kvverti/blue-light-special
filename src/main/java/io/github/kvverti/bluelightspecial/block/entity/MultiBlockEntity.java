@@ -1,9 +1,5 @@
 package io.github.kvverti.bluelightspecial.block.entity;
 
-import java.util.HashMap;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.EnumMap;
-
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
@@ -12,7 +8,9 @@ import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
 import io.github.kvverti.bluelightspecial.api.RelativeDirection;
 
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,28 +22,20 @@ import java.util.TreeMap;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.command.arguments.BlockStateArgumentType;
 import net.minecraft.entity.EntityContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Property;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 
 import org.apache.logging.log4j.Logger;
@@ -104,7 +94,9 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
      * @return whether the block state was added
      */
     public boolean addBlockState(Direction dir, BlockState state) {
-        boolean changed = addContainedState(dir, state);
+        boolean changed = !containedStates.containsKey(dir) &&
+            state.canPlaceAt(this.world, this.pos) &&
+            addContainedState(dir, state);
         if(changed) {
             this.markDirty();
         }
@@ -128,6 +120,22 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
             stateUpdated = true;
         }
         return changed;
+    }
+
+    /**
+     * Schedules a block tick through this block entity.
+     */
+    public void scheduleTick(Direction side, int ticks) {
+        BlockState state = containedStates.get(side);
+        if(state == null) {
+            throw new IllegalArgumentException("Cannot add tick with null state");
+        }
+        upcomingTicks.compute(ticks, (k, v) -> {
+            if(v == null) { v = new HashMap<>(); }
+            v.put(side, state);
+            return v;
+        });
+        this.world.getBlockTickScheduler().schedule(this.pos, BlueLightSpecial.MULTIBLOCK, ticks);
     }
 
     /**
@@ -172,39 +180,6 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
             shape = VoxelShapes.fullCube();
         }
         return shape;
-    }
-
-    /**
-     * Places the given item into this block entity, as if placed into the world.
-     */
-    public boolean placeStack(PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        // do not replace already present states
-        if(containedStates.containsKey(hitResult.getSide())) {
-            return false;
-        }
-        ForwardingWorld forwardWorld = levelMap.get(this.world);
-        forwardWorld.setCurrentMulti(this);
-        ItemUsageContext ctx =
-            new ForwardingItemUsageContext(forwardWorld, player, hand, hitResult);
-        Block block = Block.getBlockFromItem(ctx.getItemStack().getItem());
-        if(block != Blocks.AIR) {
-            // we don't have the state yet, and worse, we don't have an old state
-            // to use, so we set the current iterating state to AIR
-            currentIteratingEntry = new SimpleEntry<>(ctx.getFacing(), Blocks.AIR.getDefaultState());
-            BlockState state = block.getPlacementState(new ItemPlacementContext(ctx));
-            patchTickStates(Blocks.AIR.getDefaultState(), state);
-            boolean canPlace = block.canPlaceAt(state, this.world, this.pos);
-            boolean changed = canPlace && addBlockState(ctx.getFacing(), state);
-            currentIteratingEntry = null;
-            if(changed && (player instanceof ServerPlayerEntity)) {
-                GameMode mode = ((ServerPlayerEntity)player).interactionManager.getGameMode();
-                if(mode.isSurvivalLike()) {
-                    ctx.getItemStack().subtractAmount(1);
-                }
-            }
-            return changed;
-        }
-        return false;
     }
 
     public int getPowerLevel(Direction attach, RelativeDirection side) {

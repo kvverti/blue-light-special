@@ -1,5 +1,7 @@
 package io.github.kvverti.bluelightspecial.block;
 
+import io.github.kvverti.bluelightspecial.api.MultiBlockComponent;
+import net.minecraft.item.ItemPlacementContext;
 import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
 import io.github.kvverti.bluelightspecial.api.RelativeDirection;
 import io.github.kvverti.bluelightspecial.block.entity.MultiBlockEntity;
@@ -12,12 +14,9 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.IntegerProperty;
 import net.minecraft.state.property.Property;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -56,12 +55,25 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
     }
 
     @Override
+    public boolean canReplace(BlockState state, ItemPlacementContext ctx) {
+        return Block.getBlockFromItem(ctx.getItemStack().getItem()) instanceof MultiBlockComponent;
+    }
+
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, EntityContext ctx) {
         BlockEntity be = world.getBlockEntity(pos);
         if(be instanceof MultiBlockEntity) {
             return ((MultiBlockEntity)be).getOutlineShape(ctx);
         }
         return VoxelShapes.fullCube();
+    }
+
+    /**
+     * Toggles the state of the block in order to trigger a block update.
+     */
+    public static BlockState toggle(BlockState state) {
+        int parity = state.get(PARITY) ^ 1;
+        return state.with(PARITY, parity);
     }
 
     /**
@@ -104,23 +116,6 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
                 world.setBlockState(pos, state.with(PARITY, parity));
             }
         }
-    }
-
-    @Override
-    public boolean activate(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult ctx) {
-        if(world.isClient()) {
-            return true;
-        }
-        BlockEntity be = world.getBlockEntity(pos);
-        if(be instanceof MultiBlockEntity) {
-            MultiBlockEntity multiblock = (MultiBlockEntity)be;
-            // adjust the position to this block instead
-            BlockHitResult modified = new BlockHitResult(ctx.getPos(), ctx.getSide(), pos.offset(ctx.getSide().getOpposite()), ctx.method_17781());
-            boolean toggle = multiblock.placeStack(player, hand, modified);
-            int parity = state.get(PARITY) ^ (toggle ? 1 : 0);
-            world.setBlockState(pos, state.with(PARITY, parity));
-        }
-        return false;
     }
 
     @Override
