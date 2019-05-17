@@ -1,9 +1,9 @@
 package io.github.kvverti.bluelightspecial.block;
 
-import io.github.kvverti.bluelightspecial.block.entity.MultiBlockEntity;
 import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
 import io.github.kvverti.bluelightspecial.api.MultiBlockComponent;
 import io.github.kvverti.bluelightspecial.api.RelativeDirection;
+import io.github.kvverti.bluelightspecial.block.entity.MultiBlockEntity;
 
 import java.util.HashMap;
 import java.util.Map;

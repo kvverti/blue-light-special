@@ -1,8 +1,7 @@
 package io.github.kvverti.bluelightspecial.block;
 
-import io.github.kvverti.bluelightspecial.api.MultiBlockComponent;
-import net.minecraft.item.ItemPlacementContext;
 import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
+import io.github.kvverti.bluelightspecial.api.MultiBlockComponent;
 import io.github.kvverti.bluelightspecial.api.RelativeDirection;
 import io.github.kvverti.bluelightspecial.block.entity.MultiBlockEntity;
 
@@ -14,6 +13,7 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.IntegerProperty;
 import net.minecraft.state.property.Property;
@@ -95,11 +95,13 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
      */
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block neighbor, BlockPos neighborPos, boolean idk) {
-        BlockEntity be = world.getBlockEntity(pos);
-        if(be instanceof MultiBlockEntity) {
-            boolean toggle = ((MultiBlockEntity)be).neighborUpdate(neighbor, neighborPos, idk);
-            int parity = state.get(PARITY) ^ (toggle ? 1 : 0);
-            world.setBlockState(pos, state.with(PARITY, parity));
+        if(!world.isClient()) {
+            BlockEntity be = world.getBlockEntity(pos);
+            if(be instanceof MultiBlockEntity) {
+                boolean toggle = ((MultiBlockEntity)be).neighborUpdate(neighbor, neighborPos, idk);
+                int parity = state.get(PARITY) ^ (toggle ? 1 : 0);
+                world.setBlockState(pos, state.with(PARITY, parity));
+            }
         }
     }
 
