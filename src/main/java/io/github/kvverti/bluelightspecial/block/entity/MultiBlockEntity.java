@@ -30,6 +30,7 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.command.arguments.BlockStateArgumentType;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemUsageContext;
@@ -42,6 +43,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
 
@@ -155,6 +158,20 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
         for(Map<Direction, BlockState> toTick : upcomingTicks.values()) {
             toTick.replaceAll((k, v) -> v == oldState ? newState : v);
         }
+    }
+
+    /**
+     * Retrieves the visual bounding box.
+     */
+    public VoxelShape getOutlineShape(EntityContext ctx) {
+        VoxelShape shape = VoxelShapes.empty();
+        for(BlockState state : containedStates.values()) {
+            shape = VoxelShapes.union(shape, state.getOutlineShape(this.world, this.pos, ctx));
+        }
+        if(shape == VoxelShapes.empty()) {
+            shape = VoxelShapes.fullCube();
+        }
+        return shape;
     }
 
     /**
