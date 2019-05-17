@@ -22,6 +22,7 @@ import java.util.TreeMap;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -51,6 +52,7 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
     private final SortedMap<Integer, Map<Direction, BlockState>> upcomingTicks = new TreeMap<>();
     private Map.Entry<Direction, BlockState> currentIteratingEntry;
     private boolean stateUpdated;
+    private boolean stateBroken;
 
     public MultiBlockEntity() {
         super(BlueLightSpecial.MULTI_BLOCK_ENTITY);
@@ -65,6 +67,12 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
         boolean updated = stateUpdated;
         stateUpdated = false;
         return updated;
+    }
+
+    private boolean stateBroken() {
+        boolean broken = stateBroken;
+        stateBroken = false;
+        return broken;
     }
 
     private boolean addContainedState(Direction dir, BlockState state) {
@@ -218,8 +226,15 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
             BlockState state = currentIteratingEntry.getValue();
             BlockState newState = state.getStateForNeighborUpdate(dir, neighbor, forwardWorld, this.pos, neighborPos);
             if(state != newState) {
-                patchTickStates(state, newState);
-                newStates.put(currentIteratingEntry.getKey(), newState);
+                if(newState == Blocks.AIR.getDefaultState()) {
+                    // air is treated specially by the world, so
+                    // we schedule a "block broken" tick instead
+                    stateBroken = true;
+                    this.world.getBlockTickScheduler().schedule(this.pos, BlueLightSpecial.MULTIBLOCK, 1);
+                } else {
+                    patchTickStates(state, newState);
+                    newStates.put(currentIteratingEntry.getKey(), newState);
+                }
                 itr.remove();
                 dirty = true;
             }
@@ -260,6 +275,10 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
      * schedules a block tick update.
      */
     public boolean onScheduledTick(Random rand) {
+        if(stateBroken()) {
+            // toggle the block state to trigger an update
+            return true;
+        }
         if(upcomingTicks.isEmpty()) {
             log.warn("Multiblock ticked, but nothing in queue");
             return false;
