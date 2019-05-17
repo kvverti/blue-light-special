@@ -230,6 +230,7 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
                     // air is treated specially by the world, so
                     // we schedule a "block broken" tick instead
                     stateBroken = true;
+                    Block.dropStacks(state, this.world, this.pos);
                     this.world.getBlockTickScheduler().schedule(this.pos, BlueLightSpecial.MULTIBLOCK, 1);
                 } else {
                     patchTickStates(state, newState);

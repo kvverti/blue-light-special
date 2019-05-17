@@ -5,6 +5,9 @@ import io.github.kvverti.bluelightspecial.api.MultiBlockComponent;
 import io.github.kvverti.bluelightspecial.api.RelativeDirection;
 import io.github.kvverti.bluelightspecial.block.entity.MultiBlockEntity;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -14,6 +17,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.IntegerProperty;
 import net.minecraft.state.property.Property;
@@ -25,6 +29,8 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.loot.context.LootContext;
+import net.minecraft.world.loot.context.LootContextParameters;
 
 /**
  * Allows multiple fluorescent lights to coexist in the same block space.
@@ -66,6 +72,19 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
             return ((MultiBlockEntity)be).getOutlineShape(ctx);
         }
         return VoxelShapes.fullCube();
+    }
+
+    @Override
+    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+        BlockEntity be = builder.get(LootContextParameters.BLOCK_ENTITY);
+        if(be instanceof MultiBlockEntity) {
+            List<ItemStack> ls = new ArrayList<>();
+            for(BlockState component : ((MultiBlockEntity)be).getBlockStates()) {
+                ls.addAll(component.getDroppedStacks(builder));
+            }
+            return ls;
+        }
+        return Collections.emptyList();
     }
 
     /**
