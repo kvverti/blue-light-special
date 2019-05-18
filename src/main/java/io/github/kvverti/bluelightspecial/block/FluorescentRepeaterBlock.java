@@ -48,6 +48,16 @@ public class FluorescentRepeaterBlock extends Block implements FluorescentPowerS
     }
 
     @Override
+    public Direction getFace(BlockState state) {
+        return state.get(ATTACH).getOpposite();
+    }
+
+    @Override
+    public boolean canReplace(BlockState state, ItemPlacementContext ctx) {
+        return Block.getBlockFromItem(ctx.getItemStack().getItem()) instanceof MultiBlockComponent;
+    }
+
+    @Override
     public boolean canPlaceAt(BlockState self, ViewableWorld world, BlockPos pos) {
         Direction dir = self.get(ATTACH);
         BlockPos offset = pos.offset(dir);
@@ -61,24 +71,7 @@ public class FluorescentRepeaterBlock extends Block implements FluorescentPowerS
             .with(FACING, getPlacementFacing(ctx));
         World world = ctx.getWorld();
         BlockPos pos = ctx.getBlockPos();
-        if(world.getBlockEntity(pos) instanceof MultiBlockEntity) {
-            MultiBlockEntity be = (MultiBlockEntity)world.getBlockEntity(pos);
-            boolean placed = be.addBlockState(ctx.getFacing(), state);
-            if(placed) {
-                if(!world.isClient()) {
-                    be.scheduleTick(ctx.getFacing(), 1);
-                }
-                return MultiBlock.toggle(world.getBlockState(pos));
-            } else {
-                return world.getBlockState(pos);
-            }
-        } else {
-            if(!world.isClient()) {
-                // properly set power value once connections are set up
-                world.getBlockTickScheduler().schedule(pos, this, 1);
-            }
-            return state;
-        }
+        return this.multiBlockState(state, world, pos, 1);
     }
 
     private RelativeDirection getPlacementFacing(ItemPlacementContext ctx) {

@@ -77,6 +77,11 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
     }
 
     @Override
+    public boolean canReplace(BlockState state, ItemPlacementContext ctx) {
+        return Block.getBlockFromItem(ctx.getItemStack().getItem()) instanceof MultiBlockComponent;
+    }
+
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, EntityContext ctx) {
         return boundingBoxes.computeIfAbsent(state, FluorescentLightBlock::computeVoxelShape);
     }
@@ -105,6 +110,11 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
     }
 
     @Override
+    public Direction getFace(BlockState state) {
+        return state.get(ATTACH).getOpposite();
+    }
+
+    @Override
     public boolean canPlaceAt(BlockState self, ViewableWorld world, BlockPos pos) {
         Direction dir = self.get(ATTACH);
         BlockPos offset = pos.offset(self.get(ATTACH));
@@ -130,24 +140,7 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
                 state = state.with(getConnectionProperty(rel), false);
             }
         }
-        if(world.getBlockEntity(blockPos) instanceof MultiBlockEntity) {
-            MultiBlockEntity be = (MultiBlockEntity)world.getBlockEntity(blockPos);
-            boolean added = be.addBlockState(ctx.getFacing(), state);
-            if(added) {
-                if(!world.isClient()) {
-                    be.scheduleTick(ctx.getFacing(), 1);
-                }
-                return MultiBlock.toggle(world.getBlockState(blockPos));
-            } else {
-                return world.getBlockState(blockPos);
-            }
-        } else {
-            if(!world.isClient()) {
-                // properly set power value once connections are set up
-                world.getBlockTickScheduler().schedule(blockPos, this, 1);
-            }
-            return state;
-        }
+        return this.multiBlockState(state, world, blockPos, 1);
     }
 
     @Override
