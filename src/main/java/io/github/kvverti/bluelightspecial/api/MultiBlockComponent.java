@@ -43,7 +43,8 @@ public interface MultiBlockComponent {
                 if(!world.isClient()) {
                     be.scheduleTick(face, ticks);
                 }
-                return MultiBlock.toggle(world.getBlockState(pos));
+                return MultiBlock.toggle(world.getBlockState(pos))
+                    .with(MultiBlock.LIGHT, be.getLuminance());
             } else {
                 return world.getBlockState(pos);
             }
@@ -74,7 +75,8 @@ public interface MultiBlockComponent {
             MultiBlockEntity be = (MultiBlockEntity)world.getBlockEntity(pos);
             boolean added = be.addBlockState(face, state);
             if(added) {
-                return MultiBlock.toggle(world.getBlockState(pos));
+                return MultiBlock.toggle(world.getBlockState(pos))
+                    .with(MultiBlock.LIGHT, be.getLuminance());
             } else {
                 return world.getBlockState(pos);
             }

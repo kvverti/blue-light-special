@@ -40,14 +40,19 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
     // changing this enables us to trigger a block update when the block
     // entity's state changes
     public static final Property<Integer> PARITY = IntegerProperty.create("parity", 0, 1);
+    public static final Property<Integer> LIGHT = IntegerProperty.create("light", 0, 15);
 
     public MultiBlock(Block.Settings settings) {
         super(settings);
+        this.setDefaultState(this.stateFactory.getDefaultState()
+            .with(PARITY, 0)
+            .with(LIGHT, 0));
     }
 
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> builder) {
-        builder.add(PARITY);
+        builder.add(PARITY)
+            .add(LIGHT);
     }
 
     @Override
@@ -58,6 +63,11 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    }
+
+    @Override
+    public int getLuminance(BlockState state) {
+        return state.get(LIGHT);
     }
 
     @Override
@@ -102,9 +112,11 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
     public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState neighbor, IWorld world, BlockPos pos, BlockPos neighborPos) {
         BlockEntity be = world.getBlockEntity(pos);
         if(be instanceof MultiBlockEntity) {
-            boolean toggle = ((MultiBlockEntity)be).getStateForNeighborUpdate(dir, neighbor, neighborPos);
+            MultiBlockEntity multiblock = (MultiBlockEntity)be;
+            boolean toggle = multiblock.getStateForNeighborUpdate(dir, neighbor, neighborPos);
             int parity = state.get(PARITY) ^ (toggle ? 1 : 0);
-            return state.with(PARITY, parity);
+            return state.with(PARITY, parity)
+                .with(LIGHT, multiblock.getLuminance());
         }
         return state;
     }
@@ -117,9 +129,12 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
         if(!world.isClient()) {
             BlockEntity be = world.getBlockEntity(pos);
             if(be instanceof MultiBlockEntity) {
-                boolean toggle = ((MultiBlockEntity)be).neighborUpdate(neighbor, neighborPos, idk);
+                MultiBlockEntity multiblock = (MultiBlockEntity)be;
+                boolean toggle = multiblock.neighborUpdate(neighbor, neighborPos, idk);
                 int parity = state.get(PARITY) ^ (toggle ? 1 : 0);
-                world.setBlockState(pos, state.with(PARITY, parity));
+                world.setBlockState(pos,
+                    state.with(PARITY, parity)
+                        .with(LIGHT, multiblock.getLuminance()));
             }
         }
     }
@@ -132,9 +147,12 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
         if(!world.isClient()) {
             BlockEntity be = world.getBlockEntity(pos);
             if(be instanceof MultiBlockEntity) {
-                boolean toggle = ((MultiBlockEntity)be).onScheduledTick(rand);
+                MultiBlockEntity multiblock = (MultiBlockEntity)be;
+                boolean toggle = multiblock.onScheduledTick(rand);
                 int parity = state.get(PARITY) ^ (toggle ? 1 : 0);
-                world.setBlockState(pos, state.with(PARITY, parity));
+                world.setBlockState(pos,
+                    state.with(PARITY, parity)
+                        .with(LIGHT, multiblock.getLuminance()));
             }
         }
     }

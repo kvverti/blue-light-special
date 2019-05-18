@@ -190,6 +190,14 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
         return shape;
     }
 
+    public int getLuminance() {
+        int light = 0;
+        for(BlockState state : containedStates.values()) {
+            light = Math.max(light, state.getLuminance());
+        }
+        return light;
+    }
+
     public int getPowerLevel(Direction attach, RelativeDirection side) {
         int power = 0;
         for(BlockState state : containedStates.values()) {
