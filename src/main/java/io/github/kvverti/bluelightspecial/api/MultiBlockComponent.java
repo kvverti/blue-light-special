@@ -32,6 +32,10 @@ public interface MultiBlockComponent {
             // into it, then call the placing method for the multiblock
             BlockState component = world.getBlockState(pos);
             MultiBlockComponent block = (MultiBlockComponent)component.getBlock();
+            if(block.getFace(component) == face) {
+                // cannot replace an existing face
+                return component;
+            }
             world.setBlockState(pos, BlueLightSpecial.MULTIBLOCK.getDefaultState(), 0);
             MultiBlockEntity be = (MultiBlockEntity)world.getBlockEntity(pos);
             be.addBlockState(block.getFace(component), component);
@@ -67,6 +71,10 @@ public interface MultiBlockComponent {
             // into it, then call the placing method for the multiblock
             BlockState component = world.getBlockState(pos);
             MultiBlockComponent block = (MultiBlockComponent)component.getBlock();
+            if(block.getFace(component) == face) {
+                // cannot replace an existing face
+                return component;
+            }
             world.setBlockState(pos, BlueLightSpecial.MULTIBLOCK.getDefaultState(), 0);
             MultiBlockEntity be = (MultiBlockEntity)world.getBlockEntity(pos);
             be.addBlockState(block.getFace(component), component);
