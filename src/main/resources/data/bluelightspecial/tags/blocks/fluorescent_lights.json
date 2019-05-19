@@ -1,0 +1,21 @@
+{
+    "replace": false,
+    "values": [
+        "bluelightspecial:white_fluorescent_light",
+        "bluelightspecial:orange_fluorescent_light",
+        "bluelightspecial:magenta_fluorescent_light",
+        "bluelightspecial:light_blue_fluorescent_light",
+        "bluelightspecial:yellow_fluorescent_light",
+        "bluelightspecial:lime_fluorescent_light",
+        "bluelightspecial:pink_fluorescent_light",
+        "bluelightspecial:gray_fluorescent_light",
+        "bluelightspecial:light_gray_fluorescent_light",
+        "bluelightspecial:cyan_fluorescent_light",
+        "bluelightspecial:purple_fluorescent_light",
+        "bluelightspecial:blue_fluorescent_light",
+        "bluelightspecial:brown_fluorescent_light",
+        "bluelightspecial:green_fluorescent_light",
+        "bluelightspecial:red_fluorescent_light",
+        "bluelightspecial:black_fluorescent_light"
+    ]
+}
