@@ -1,9 +1,7 @@
 package io.github.kvverti.bluelightspecial.block;
 
 import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
-import io.github.kvverti.bluelightspecial.api.MultiBlockComponent;
 import io.github.kvverti.bluelightspecial.api.RelativeDirection;
-import io.github.kvverti.bluelightspecial.block.entity.MultiBlockEntity;
 
 import java.util.Random;
 
@@ -25,7 +23,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
 
-public class FluorescentRepeaterBlock extends Block implements FluorescentPowerSource, MultiBlockComponent {
+public class FluorescentRepeaterBlock extends AbstractMultiBlockComponent implements FluorescentPowerSource {
 
     public static final Property<Direction> ATTACH = FluorescentLightBlock.ATTACH;
     public static final Property<RelativeDirection> FACING = EnumProperty.create("facing", RelativeDirection.class);
@@ -53,11 +51,6 @@ public class FluorescentRepeaterBlock extends Block implements FluorescentPowerS
     }
 
     @Override
-    public boolean canReplace(BlockState state, ItemPlacementContext ctx) {
-        return Block.getBlockFromItem(ctx.getItemStack().getItem()) instanceof MultiBlockComponent;
-    }
-
-    @Override
     public boolean canPlaceAt(BlockState self, ViewableWorld world, BlockPos pos) {
         Direction dir = self.get(ATTACH);
         BlockPos offset = pos.offset(dir);
@@ -65,13 +58,10 @@ public class FluorescentRepeaterBlock extends Block implements FluorescentPowerS
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState state = getDefaultState()
+    protected BlockState computePlacementState(ItemPlacementContext ctx) {
+        return getDefaultState()
             .with(ATTACH, ctx.getFacing().getOpposite())
             .with(FACING, getPlacementFacing(ctx));
-        World world = ctx.getWorld();
-        BlockPos pos = ctx.getBlockPos();
-        return this.multiBlockState(state, world, pos, 1);
     }
 
     private RelativeDirection getPlacementFacing(ItemPlacementContext ctx) {

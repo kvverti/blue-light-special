@@ -1,9 +1,7 @@
 package io.github.kvverti.bluelightspecial.block;
 
 import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
-import io.github.kvverti.bluelightspecial.api.MultiBlockComponent;
 import io.github.kvverti.bluelightspecial.api.RelativeDirection;
-import io.github.kvverti.bluelightspecial.block.entity.MultiBlockEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +29,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
 
-public class FluorescentLightBlock extends Block implements FluorescentPowerSource, MultiBlockComponent, ColoredBlock {
+public class FluorescentLightBlock extends AbstractMultiBlockComponent implements FluorescentPowerSource, ColoredBlock {
 
     public static final Property<Integer> POWER = IntegerProperty.create("power", 0, 15);
     public static final Property<Direction> ATTACH = DirectionProperty.create("attach", d -> true);
@@ -77,11 +75,6 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
     }
 
     @Override
-    public boolean canReplace(BlockState state, ItemPlacementContext ctx) {
-        return Block.getBlockFromItem(ctx.getItemStack().getItem()) instanceof MultiBlockComponent;
-    }
-
-    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, EntityContext ctx) {
         return boundingBoxes.computeIfAbsent(state, FluorescentLightBlock::computeVoxelShape);
     }
@@ -122,14 +115,13 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
+    protected BlockState computePlacementState(ItemPlacementContext ctx) {
         World world = ctx.getWorld();
-        BlockPos blockPos = ctx.getBlockPos();
         Direction attach =  ctx.getFacing().getOpposite();
         BlockState state = getDefaultState().with(ATTACH, attach);
         // determine initial connections
         for(Direction dir : SIDE_DIRECTIONS[attach.getId() / 2]) {
-            BlockPos pos = blockPos.offset(dir);
+            BlockPos pos = ctx.getBlockPos().offset(dir);
             RelativeDirection rel = RelativeDirection.getRelativeDirection(attach, dir);
             if(world.getBlockState(pos).getBlock() instanceof FluorescentPowerSource) {
                 BlockState neighbor = world.getBlockState(pos);
@@ -140,7 +132,7 @@ public class FluorescentLightBlock extends Block implements FluorescentPowerSour
                 state = state.with(getConnectionProperty(rel), false);
             }
         }
-        return this.multiBlockState(state, world, blockPos, 1);
+        return state;
     }
 
     @Override
