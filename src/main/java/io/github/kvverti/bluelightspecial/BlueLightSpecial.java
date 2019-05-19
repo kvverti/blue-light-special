@@ -9,8 +9,11 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.FlowerBlock;
+import net.minecraft.block.FlowerPotBlock;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -44,6 +47,8 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Block FLUORESCENT_TUBE;
     public static final Block FLUORESCENT_REPEATER;
     public static final Block MULTIBLOCK;
+    public static final Block GLOW_FLOWER;
+    public static final Block POTTED_GLOW_FLOWER;
 
     // custom items
 
@@ -65,6 +70,7 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Item BLACK_FLUORESCENT_LIGHT_ITEM;
     public static final Item FLUORESCENT_TUBE_ITEM;
     public static final Item FLUORESCENT_REPEATER_ITEM;
+    public static final Item GLOW_FLOWER_ITEM;
 
     // custom block entities
     public static final BlockEntityType<MultiBlockEntity> MULTI_BLOCK_ENTITY;
@@ -91,6 +97,8 @@ public class BlueLightSpecial implements ModInitializer {
         Registry.register(Registry.BLOCK, new Identifier(MODID, "fluorescent_tube"), FLUORESCENT_TUBE);
         Registry.register(Registry.BLOCK, new Identifier(MODID, "fluorescent_repeater"), FLUORESCENT_REPEATER);
         Registry.register(Registry.BLOCK, new Identifier(MODID, "multiblock"), MULTIBLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "glow_flower"), GLOW_FLOWER);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "potted_glow_flower"), POTTED_GLOW_FLOWER);
 
         // items
         Registry.register(Registry.ITEM, new Identifier(MODID, "white_fluorescent_light"), WHITE_FLUORESCENT_LIGHT_ITEM);
@@ -111,6 +119,7 @@ public class BlueLightSpecial implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "black_fluorescent_light"), BLACK_FLUORESCENT_LIGHT_ITEM);
         Registry.register(Registry.ITEM, new Identifier(MODID, "fluorescent_tube"), FLUORESCENT_TUBE_ITEM);
         Registry.register(Registry.ITEM, new Identifier(MODID, "fluorescent_repeater"), FLUORESCENT_REPEATER_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "glow_flower"), GLOW_FLOWER_ITEM);
 
         // block entities
         Registry.register(Registry.BLOCK_ENTITY, new Identifier(MODID, "multiblock"), MULTI_BLOCK_ENTITY);
@@ -147,6 +156,18 @@ public class BlueLightSpecial implements ModInitializer {
         FLUORESCENT_REPEATER = new FluorescentRepeaterBlock(tubeSettings);
         MULTIBLOCK = new MultiBlock(tubeSettings);
 
+        Block.Settings plantSettings = FabricBlockSettings.of(Material.REPLACEABLE_PLANT)
+            .sounds(BlockSoundGroup.GRASS)
+            .noCollision()
+            .lightLevel(5)
+            .build();
+        GLOW_FLOWER = new FlowerBlock(StatusEffects.NIGHT_VISION, 10, plantSettings);
+        POTTED_GLOW_FLOWER = new FlowerPotBlock(
+            GLOW_FLOWER,
+            FabricBlockSettings.of(Material.PART)
+                .lightLevel(5)
+                .build());
+
         Item.Settings lightItemSettings = new Item.Settings()
             .itemGroup(ItemGroup.REDSTONE);
         WHITE_FLUORESCENT_LIGHT_ITEM = new BlockItem(WHITE_FLUORESCENT_LIGHT, lightItemSettings);
@@ -167,6 +188,7 @@ public class BlueLightSpecial implements ModInitializer {
         BLACK_FLUORESCENT_LIGHT_ITEM = new BlockItem(BLACK_FLUORESCENT_LIGHT, lightItemSettings);
         FLUORESCENT_TUBE_ITEM = new BlockItem(FLUORESCENT_TUBE, lightItemSettings);
         FLUORESCENT_REPEATER_ITEM = new BlockItem(FLUORESCENT_REPEATER, lightItemSettings);
+        GLOW_FLOWER_ITEM = new BlockItem(GLOW_FLOWER, new Item.Settings().itemGroup(ItemGroup.DECORATIONS));
 
         MULTI_BLOCK_ENTITY = BlockEntityType.Builder
             .create(MultiBlockEntity::new, MULTIBLOCK)

@@ -1,0 +1,6 @@
+{
+    "parent": "block/flower_pot_cross",
+    "textures": {
+        "plant": "bluelightspecial:block/glow_flower"
+    }
+}
