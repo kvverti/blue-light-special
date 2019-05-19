@@ -32,7 +32,7 @@ public interface MultiBlockComponent {
             // into it, then call the placing method for the multiblock
             BlockState component = world.getBlockState(pos);
             MultiBlockComponent block = (MultiBlockComponent)component.getBlock();
-            if(block.getFace(component) == face) {
+            if(!state.canPlaceAt(world, pos) || block.getFace(component) == face) {
                 // cannot replace an existing face
                 return component;
             }
@@ -49,15 +49,13 @@ public interface MultiBlockComponent {
                 }
                 return MultiBlock.toggle(world.getBlockState(pos))
                     .with(MultiBlock.LIGHT, be.getLuminance());
-            } else {
-                return world.getBlockState(pos);
             }
         } else {
             if(!world.isClient()) {
                 world.getBlockTickScheduler().schedule(pos, (Block)this, ticks);
             }
-            return state;
         }
+        return state;
     }
 
     /**
@@ -71,7 +69,7 @@ public interface MultiBlockComponent {
             // into it, then call the placing method for the multiblock
             BlockState component = world.getBlockState(pos);
             MultiBlockComponent block = (MultiBlockComponent)component.getBlock();
-            if(block.getFace(component) == face) {
+            if(!state.canPlaceAt(world, pos) || block.getFace(component) == face) {
                 // cannot replace an existing face
                 return component;
             }
@@ -85,11 +83,8 @@ public interface MultiBlockComponent {
             if(added) {
                 return MultiBlock.toggle(world.getBlockState(pos))
                     .with(MultiBlock.LIGHT, be.getLuminance());
-            } else {
-                return world.getBlockState(pos);
             }
-        } else {
-            return state;
         }
+        return state;
     }
 }
