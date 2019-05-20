@@ -4,6 +4,7 @@ import io.github.kvverti.bluelightspecial.block.FluorescentLightBlock;
 import io.github.kvverti.bluelightspecial.block.FluorescentRepeaterBlock;
 import io.github.kvverti.bluelightspecial.block.MultiBlock;
 import io.github.kvverti.bluelightspecial.block.entity.MultiBlockEntity;
+import io.github.kvverti.bluelightspecial.feature.FluorescentFlowerFeature;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
@@ -21,6 +22,14 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.decorator.CountDecoratorConfig;
+import net.minecraft.world.gen.decorator.Decorator;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.DefaultFeatureConfig;
+import net.minecraft.world.gen.feature.FeatureConfig;
 
 public class BlueLightSpecial implements ModInitializer {
 
@@ -75,6 +84,10 @@ public class BlueLightSpecial implements ModInitializer {
     // custom block entities
     public static final BlockEntityType<MultiBlockEntity> MULTI_BLOCK_ENTITY;
 
+    // custom features
+
+    public static final FluorescentFlowerFeature GLOW_FLOWER_FEATURE;
+
     @Override
     public void onInitialize() {
         // blocks
@@ -123,6 +136,21 @@ public class BlueLightSpecial implements ModInitializer {
 
         // block entities
         Registry.register(Registry.BLOCK_ENTITY, new Identifier(MODID, "multiblock"), MULTI_BLOCK_ENTITY);
+
+        // features
+        Registry.register(Registry.FEATURE, new Identifier(MODID, "fluorescent_flowers"), GLOW_FLOWER_FEATURE);
+
+        // tweak vanilla biomes
+        ConfiguredFeature<?> glowFlower = Biome.configureFeature(
+            BlueLightSpecial.GLOW_FLOWER_FEATURE,
+            FeatureConfig.DEFAULT,
+            Decorator.COUNT_HEIGHTMAP_32,
+            new CountDecoratorConfig(2));
+        Biomes.FOREST.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, glowFlower);
+        Biomes.BIRCH_FOREST.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, glowFlower);
+        Biomes.BIRCH_FOREST_HILLS.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, glowFlower);
+        Biomes.DARK_FOREST.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, glowFlower);
+        Biomes.DARK_FOREST_HILLS.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, glowFlower);
     }
 
     static {
@@ -193,5 +221,7 @@ public class BlueLightSpecial implements ModInitializer {
         MULTI_BLOCK_ENTITY = BlockEntityType.Builder
             .create(MultiBlockEntity::new, MULTIBLOCK)
             .build(null);
+
+        GLOW_FLOWER_FEATURE = new FluorescentFlowerFeature(DefaultFeatureConfig::deserialize);
     }
 }
