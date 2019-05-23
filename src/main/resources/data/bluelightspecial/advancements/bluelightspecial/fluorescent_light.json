@@ -1,0 +1,167 @@
+{
+    "parent": "bluelightspecial:bluelightspecial/root",
+    "display": {
+        "icon": {
+            "item": "bluelightspecial:light_blue_fluorescent_light"
+        },
+        "title": {
+            "translate": "advancements.bluelightspecial.fluorescent_light.title"
+        },
+        "description": {
+            "translate": "advancements.bluelightspecial.fluorescent_light.description"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true
+    },
+    "criteria": {
+        "has_white_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:white_fluorescent_light" }
+                ]
+            }
+        },
+        "has_orange_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:orange_fluorescent_light" }
+                ]
+            }
+        },
+        "has_magenta_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:magenta_fluorescent_light" }
+                ]
+            }
+        },
+        "has_light_blue_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:light_blue_fluorescent_light" }
+                ]
+            }
+        },
+        "has_yellow_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:yellow_fluorescent_light" }
+                ]
+            }
+        },
+        "has_lime_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:lime_fluorescent_light" }
+                ]
+            }
+        },
+        "has_pink_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:pink_fluorescent_light" }
+                ]
+            }
+        },
+        "has_gray_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:gray_fluorescent_light" }
+                ]
+            }
+        },
+        "has_light_gray_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:light_gray_fluorescent_light" }
+                ]
+            }
+        },
+        "has_cyan_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:cyan_fluorescent_light" }
+                ]
+            }
+        },
+        "has_purple_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:purple_fluorescent_light" }
+                ]
+            }
+        },
+        "has_blue_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:blue_fluorescent_light" }
+                ]
+            }
+        },
+        "has_brown_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:brown_fluorescent_light" }
+                ]
+            }
+        },
+        "has_green_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:green_fluorescent_light" }
+                ]
+            }
+        },
+        "has_red_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:red_fluorescent_light" }
+                ]
+            }
+        },
+        "has_black_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:black_fluorescent_light" }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_white_fluorescent_light",
+            "has_orange_fluorescent_light",
+            "has_magenta_fluorescent_light",
+            "has_light_blue_fluorescent_light",
+            "has_yellow_fluorescent_light",
+            "has_lime_fluorescent_light",
+            "has_pink_fluorescent_light",
+            "has_gray_fluorescent_light",
+            "has_light_gray_fluorescent_light",
+            "has_cyan_fluorescent_light",
+            "has_purple_fluorescent_light",
+            "has_blue_fluorescent_light",
+            "has_brown_fluorescent_light",
+            "has_green_fluorescent_light",
+            "has_red_fluorescent_light",
+            "has_black_fluorescent_light"
+        ]
+    ]
+}

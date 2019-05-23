@@ -1,0 +1,32 @@
+{
+    "display": {
+        "icon": {
+            "item": "bluelightspecial:glow_flower"
+        },
+        "title": {
+            "translate": "advancements.bluelightspecial.root.title"
+        },
+        "description": {
+            "translate": "advancements.bluelightspecial.root.description"
+        },
+        "frame": "task",
+        "show_toast": false,
+        "announce_to_chat": false,
+        "background": "minecraft:textures/block/stone.png"
+    },
+    "criteria": {
+        "has_glow_flower": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:glow_flower" }
+                ]
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_glow_flower"
+        ]
+    ]
+}

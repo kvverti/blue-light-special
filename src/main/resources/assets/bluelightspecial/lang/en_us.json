@@ -19,5 +19,9 @@
     "block.bluelightspecial.fluorescent_repeater": "Fluorescent Repeater",
     "block.bluelightspecial.glow_flower": "Glow Flower",
     "item.bluelightspecial.fluorescent_dust": "Fluorescent Dust",
-    "item.bluelightspecial.concentrated_fluorescent_dust": "Concentrated Fluorescent Dust"
+    "item.bluelightspecial.concentrated_fluorescent_dust": "Concentrated Fluorescent Dust",
+    "advancements.bluelightspecial.root.title": "Blue Light Special",
+    "advancements.bluelightspecial.root.description": "Find a little light in your night",
+    "advancements.bluelightspecial.fluorescent_light.title": "The Light of the World",
+    "advancements.bluelightspecial.fluorescent_light.description": "Craft a fluorescent light"
 }
