@@ -1,0 +1,19 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "OOO",
+        "***"
+    ],
+    "key": {
+        "O": {
+            "item": "minecraft:glass_pane"
+        },
+        "*": {
+            "item": "bluelightspecial:concentrated_fluorescent_dust"
+        }
+    },
+    "result": {
+        "item": "bluelightspecial:fluorescent_tube",
+        "count": 3
+    }
+}

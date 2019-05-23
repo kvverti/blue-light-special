@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "bluelightspecial:fluorescent_light",
+    "pattern": [
+        "OOO",
+        "***"
+    ],
+    "key": {
+        "O": {
+            "item": "minecraft:blue_stained_glass_pane"
+        },
+        "*": {
+            "item": "bluelightspecial:concentrated_fluorescent_dust"
+        }
+    },
+    "result": {
+        "item": "bluelightspecial:blue_fluorescent_light",
+        "count": 3
+    }
+}

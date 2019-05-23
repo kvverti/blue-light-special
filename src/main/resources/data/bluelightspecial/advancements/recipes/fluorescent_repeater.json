@@ -1,0 +1,39 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "bluelightspecial:fluorescent_repeater"
+        ]
+    },
+    "criteria": {
+        "has_redstone": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "minecraft:redstone" }
+                ]
+            }
+        },
+        "has_fluorescent_tube": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:fluorescent_tube" }
+                ]
+            }
+        },
+        "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "bluelightspecial:fluorescent_repeater"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_redstone",
+            "has_fluorescent_tube",
+            "has_the_recipe"
+        ]
+    ]
+}

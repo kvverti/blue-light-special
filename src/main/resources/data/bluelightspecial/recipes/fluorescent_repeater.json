@@ -1,0 +1,15 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "bluelightspecial:fluorescent_tube"
+        },
+        {
+            "item": "minecraft:redstone"
+        }
+    ],
+    "result": {
+        "item": "bluelightspecial:fluorescent_repeater",
+        "count": 1
+    }
+}
