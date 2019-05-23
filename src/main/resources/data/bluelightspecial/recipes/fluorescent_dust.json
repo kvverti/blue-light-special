@@ -1,0 +1,12 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "bluelightspecial:glow_flower"
+        }
+    ],
+    "result": {
+        "item": "bluelightspecial:fluorescent_dust",
+        "count": 1
+    }
+}

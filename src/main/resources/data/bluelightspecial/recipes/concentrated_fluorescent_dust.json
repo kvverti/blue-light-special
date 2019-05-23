@@ -1,0 +1,9 @@
+{
+    "type": "minecraft:smelting",
+    "ingredient": {
+        "item": "bluelightspecial:fluorescent_dust"
+    },
+    "result": "bluelightspecial:concentrated_fluorescent_dust",
+    "experience": 0.35,
+    "cookingtime": 200
+}

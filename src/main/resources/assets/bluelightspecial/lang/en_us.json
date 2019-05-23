@@ -17,5 +17,7 @@
     "block.bluelightspecial.white_fluorescent_light": "White Fluorescent Light",
     "block.bluelightspecial.fluorescent_tube": "Fluorescent Tubing",
     "block.bluelightspecial.fluorescent_repeater": "Fluorescent Repeater",
-    "block.bluelightspecial.glow_flower": "Glow Flower"
+    "block.bluelightspecial.glow_flower": "Glow Flower",
+    "item.bluelightspecial.fluorescent_dust": "Fluorescent Dust",
+    "item.bluelightspecial.concentrated_fluorescent_dust": "Concentrated Fluorescent Dust"
 }

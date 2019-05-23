@@ -80,6 +80,8 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Item FLUORESCENT_TUBE_ITEM;
     public static final Item FLUORESCENT_REPEATER_ITEM;
     public static final Item GLOW_FLOWER_ITEM;
+    public static final Item FLUORESCENT_DUST;
+    public static final Item CONCENTRATED_FLUORESCENT_DUST;
 
     // custom block entities
     public static final BlockEntityType<MultiBlockEntity> MULTI_BLOCK_ENTITY;
@@ -133,6 +135,8 @@ public class BlueLightSpecial implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "fluorescent_tube"), FLUORESCENT_TUBE_ITEM);
         Registry.register(Registry.ITEM, new Identifier(MODID, "fluorescent_repeater"), FLUORESCENT_REPEATER_ITEM);
         Registry.register(Registry.ITEM, new Identifier(MODID, "glow_flower"), GLOW_FLOWER_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "fluorescent_dust"), FLUORESCENT_DUST);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "concentrated_fluorescent_dust"), CONCENTRATED_FLUORESCENT_DUST);
 
         // block entities
         Registry.register(Registry.BLOCK_ENTITY, new Identifier(MODID, "multiblock"), MULTI_BLOCK_ENTITY);
@@ -217,6 +221,10 @@ public class BlueLightSpecial implements ModInitializer {
         FLUORESCENT_TUBE_ITEM = new BlockItem(FLUORESCENT_TUBE, lightItemSettings);
         FLUORESCENT_REPEATER_ITEM = new BlockItem(FLUORESCENT_REPEATER, lightItemSettings);
         GLOW_FLOWER_ITEM = new BlockItem(GLOW_FLOWER, new Item.Settings().itemGroup(ItemGroup.DECORATIONS));
+
+        Item.Settings matSettings = new Item.Settings().itemGroup(ItemGroup.MATERIALS);
+        FLUORESCENT_DUST = new Item(matSettings);
+        CONCENTRATED_FLUORESCENT_DUST = new Item(matSettings);
 
         MULTI_BLOCK_ENTITY = BlockEntityType.Builder
             .create(MultiBlockEntity::new, MULTIBLOCK)
