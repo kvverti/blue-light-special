@@ -158,7 +158,8 @@ public class BlueLightSpecial implements ModInitializer {
     }
 
     static {
-        Block.Settings lightSettings = FabricBlockSettings.of(Material.GLASS)
+        Block.Settings lightSettings = FabricBlockSettings.of(Material.PART)
+            .strength(0.1f, 0.1f)
             .sounds(BlockSoundGroup.GLASS)
             .noCollision()
             .lightLevel(15)
@@ -180,7 +181,8 @@ public class BlueLightSpecial implements ModInitializer {
         RED_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.RED, lightSettings);
         BLACK_FLUORESCENT_LIGHT = new FluorescentLightBlock(DyeColor.BLACK, lightSettings);
 
-        Block.Settings tubeSettings = FabricBlockSettings.of(Material.GLASS)
+        Block.Settings tubeSettings = FabricBlockSettings.of(Material.PART)
+            .strength(0.1f, 0.1f)
             .sounds(BlockSoundGroup.STONE)
             .noCollision()
             .build();
