@@ -227,7 +227,6 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
     public boolean getStateForNeighborUpdate(Direction dir, BlockState neighbor, BlockPos neighborPos) {
         Map<Direction, BlockState> newStates = new HashMap<>();
         ForwardingWorld forwardWorld = levelMap.get(this.world);
-        forwardWorld.setCurrentMulti(this);
         boolean dirty = false;
         for(Iterator<Map.Entry<Direction, BlockState>> itr = containedStates.entrySet().iterator(); itr.hasNext(); ) {
             currentIteratingEntry = itr.next();
@@ -261,7 +260,6 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
     public boolean neighborUpdate(Block neighbor, BlockPos neighborPos, boolean idk) {
         // call the callback methods
         ForwardingWorld forwardWorld = levelMap.get(this.world);
-        forwardWorld.setCurrentMulti(this);
         boolean dirty = false;
         Set<Map.Entry<Direction, BlockState>> tmpStates = new HashSet<>(containedStates.entrySet());
         for(Map.Entry<Direction, BlockState> entry : tmpStates) {
@@ -297,7 +295,6 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
         Integer tick0 = upcomingTicks.firstKey();
         Map<Direction, BlockState> toTick = upcomingTicks.remove(tick0);
         ForwardingWorld forwardWorld = levelMap.get(this.world);
-        forwardWorld.setCurrentMulti(this);
         for(Map.Entry<Direction, BlockState> entry : toTick.entrySet()) {
             currentIteratingEntry = entry;
             BlockState state = entry.getValue();

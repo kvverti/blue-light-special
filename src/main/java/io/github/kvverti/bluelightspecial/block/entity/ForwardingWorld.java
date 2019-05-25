@@ -31,7 +31,6 @@ public class ForwardingWorld extends World {
 
     private final World forward;
     private final ForwardingBlockTickScheduler scheduler;
-    private MultiBlockEntity be;
 
     public ForwardingWorld(World forward) {
         super(forward.getLevelProperties(),
@@ -41,10 +40,6 @@ public class ForwardingWorld extends World {
             forward.isClient);
         this.forward = forward;
         this.scheduler = new ForwardingBlockTickScheduler(forward.getBlockTickScheduler());
-    }
-
-    public void setCurrentMulti(MultiBlockEntity be) {
-        this.be = be;
     }
 
     @Override
@@ -150,7 +145,7 @@ public class ForwardingWorld extends World {
             BlockEntity be = ForwardingWorld.this.getBlockEntity(pos);
             if(be instanceof MultiBlockEntity) {
                 forward.schedule(pos, BlueLightSpecial.MULTIBLOCK, ticks, priority);
-                ForwardingWorld.this.be.addTick(ticks);
+                ((MultiBlockEntity)be).addTick(ticks);
             } else {
                 forward.schedule(pos, block, ticks, priority);
             }
