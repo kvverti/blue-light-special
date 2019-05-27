@@ -3,6 +3,7 @@ package io.github.kvverti.bluelightspecial.block;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
@@ -44,6 +45,13 @@ public class CagedBulbBlock extends Block {
     }
 
     @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        Direction attach = ctx.getFacing().getOpposite();
+        int power = ctx.getWorld().getEmittedRedstonePower(ctx.getBlockPos().offset(attach), attach.getOpposite());
+        return this.getDefaultState().with(ATTACH, attach).with(POWER, power);
+    }
+
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState neighbor, IWorld world, BlockPos pos, BlockPos neighborPos) {
         if(!canPlaceAt(state, world, pos)) {
             return Blocks.AIR.getDefaultState();
@@ -53,7 +61,8 @@ public class CagedBulbBlock extends Block {
 
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block neighbor, BlockPos neighborPos, boolean idk) {
-        int power = world.getReceivedRedstonePower(pos);
+        Direction attach = state.get(ATTACH);
+        int power = world.getEmittedRedstonePower(pos.offset(attach), attach.getOpposite());
         world.setBlockState(pos, state.with(POWER, power));
     }
 }
