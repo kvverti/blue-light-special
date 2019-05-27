@@ -1,5 +1,6 @@
 package io.github.kvverti.bluelightspecial;
 
+import io.github.kvverti.bluelightspecial.block.CagedBulbBlock;
 import io.github.kvverti.bluelightspecial.block.FluorescentLightBlock;
 import io.github.kvverti.bluelightspecial.block.FluorescentRepeaterBlock;
 import io.github.kvverti.bluelightspecial.block.MultiBlock;
@@ -58,6 +59,7 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Block MULTIBLOCK;
     public static final Block GLOW_FLOWER;
     public static final Block POTTED_GLOW_FLOWER;
+    public static final Block CAGED_LANTERN;
 
     // custom items
 
@@ -82,6 +84,7 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Item GLOW_FLOWER_ITEM;
     public static final Item FLUORESCENT_DUST;
     public static final Item CONCENTRATED_FLUORESCENT_DUST;
+    public static final Item CAGED_LANTERN_ITEM;
 
     // custom block entities
     public static final BlockEntityType<MultiBlockEntity> MULTI_BLOCK_ENTITY;
@@ -114,6 +117,7 @@ public class BlueLightSpecial implements ModInitializer {
         Registry.register(Registry.BLOCK, new Identifier(MODID, "multiblock"), MULTIBLOCK);
         Registry.register(Registry.BLOCK, new Identifier(MODID, "glow_flower"), GLOW_FLOWER);
         Registry.register(Registry.BLOCK, new Identifier(MODID, "potted_glow_flower"), POTTED_GLOW_FLOWER);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "caged_lantern"), CAGED_LANTERN);
 
         // items
         Registry.register(Registry.ITEM, new Identifier(MODID, "white_fluorescent_light"), WHITE_FLUORESCENT_LIGHT_ITEM);
@@ -137,6 +141,7 @@ public class BlueLightSpecial implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "glow_flower"), GLOW_FLOWER_ITEM);
         Registry.register(Registry.ITEM, new Identifier(MODID, "fluorescent_dust"), FLUORESCENT_DUST);
         Registry.register(Registry.ITEM, new Identifier(MODID, "concentrated_fluorescent_dust"), CONCENTRATED_FLUORESCENT_DUST);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "caged_lantern"), CAGED_LANTERN_ITEM);
 
         // block entities
         Registry.register(Registry.BLOCK_ENTITY, new Identifier(MODID, "multiblock"), MULTI_BLOCK_ENTITY);
@@ -201,6 +206,10 @@ public class BlueLightSpecial implements ModInitializer {
             FabricBlockSettings.of(Material.PART)
                 .lightLevel(5)
                 .build());
+        CAGED_LANTERN = new CagedBulbBlock(FabricBlockSettings.of(Material.PART)
+            .strength(0.3f, 0.3f)
+            .sounds(BlockSoundGroup.GLASS)
+            .build());
 
         Item.Settings lightItemSettings = new Item.Settings()
             .itemGroup(ItemGroup.REDSTONE);
@@ -222,6 +231,7 @@ public class BlueLightSpecial implements ModInitializer {
         BLACK_FLUORESCENT_LIGHT_ITEM = new BlockItem(BLACK_FLUORESCENT_LIGHT, lightItemSettings);
         FLUORESCENT_TUBE_ITEM = new BlockItem(FLUORESCENT_TUBE, lightItemSettings);
         FLUORESCENT_REPEATER_ITEM = new BlockItem(FLUORESCENT_REPEATER, lightItemSettings);
+        CAGED_LANTERN_ITEM = new BlockItem(CAGED_LANTERN, lightItemSettings);
         GLOW_FLOWER_ITEM = new BlockItem(GLOW_FLOWER, new Item.Settings().itemGroup(ItemGroup.DECORATIONS));
 
         Item.Settings matSettings = new Item.Settings().itemGroup(ItemGroup.MATERIALS);
