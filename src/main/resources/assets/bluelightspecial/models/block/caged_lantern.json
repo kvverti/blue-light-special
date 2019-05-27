@@ -1,0 +1,20 @@
+{
+    "parent": "block/block",
+    "textures": {
+        "particle": "#lantern"
+    },
+    "elements": [
+        {
+            "from": [5, 0, 5],
+            "to": [11, 10, 11],
+            "faces": {
+                "down": { "texture": "#lantern" },
+                "up": { "texture": "#lantern" },
+                "north": { "texture": "#lantern" },
+                "south": { "texture": "#lantern" },
+                "west": { "texture": "#lantern" },
+                "east": { "texture": "#lantern" }
+            }
+        }
+    ]
+}

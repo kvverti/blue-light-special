@@ -1,0 +1,10 @@
+{
+    "variants": {
+        "attach=down": { "model": "bluelightspecial:block/caged_lantern" },
+        "attach=east": { "model": "bluelightspecial:block/caged_lantern", "x": -90, "y": 90 },
+        "attach=north": { "model": "bluelightspecial:block/caged_lantern", "x": -90 },
+        "attach=south": { "model": "bluelightspecial:block/caged_lantern", "x": 90 },
+        "attach=up": { "model": "bluelightspecial:block/caged_lantern", "x": 180 },
+        "attach=west": { "model": "bluelightspecial:block/caged_lantern", "x": 90, "y": 90 }
+    }
+}
