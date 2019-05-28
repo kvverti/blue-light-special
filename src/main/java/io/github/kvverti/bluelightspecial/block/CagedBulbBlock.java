@@ -1,6 +1,7 @@
 package io.github.kvverti.bluelightspecial.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityContext;
@@ -38,6 +39,11 @@ public class CagedBulbBlock extends Block {
     @Override
     public int getLuminance(BlockState state) {
         return state.get(POWER);
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT_MIPPED;
     }
 
     private static final VoxelShape[] BOUNDING_BOXES = {

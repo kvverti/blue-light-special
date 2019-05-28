@@ -1,14 +1,38 @@
 {
     "parent": "block/block",
     "textures": {
-        "particle": "#lantern"
+        "particle": "bluelightspecial:block/caged_lantern_cage",
+        "cage": "bluelightspecial:block/caged_lantern_cage"
     },
     "elements": [
         {
             "from": [5, 0, 5],
             "to": [11, 10, 11],
             "faces": {
-                "down": { "texture": "#lantern" },
+                "down": { "uv": [8, 0, 14, 6], "texture": "#cage" },
+                "up": { "uv": [2, 0, 8, 6], "texture": "#cage" },
+                "north": { "uv": [2, 6, 8, 16], "texture": "#cage" },
+                "south": { "uv": [2, 6, 8, 16], "texture": "#cage" },
+                "west": { "uv": [2, 6, 8, 16], "texture": "#cage" },
+                "east": { "uv": [2, 6, 8, 16], "texture": "#cage" }
+            }
+        },
+        {
+            "from": [11, 10, 11],
+            "to": [5, 0.005, 5],
+            "faces": {
+                "down": { "uv": [2, 0, 8, 6], "texture": "#cage" },
+                "up": { "uv": [8, 0, 14, 6], "texture": "#cage" },
+                "north": { "uv": [2, 6, 8, 16], "texture": "#cage", "rotation": 180 },
+                "south": { "uv": [2, 6, 8, 16], "texture": "#cage", "rotation": 180 },
+                "west": { "uv": [2, 6, 8, 16], "texture": "#cage", "rotation": 180 },
+                "east": { "uv": [2, 6, 8, 16], "texture": "#cage", "rotation": 180 }
+            }
+        },
+        {
+            "from": [7, 0, 7],
+            "to": [9, 9, 9],
+            "faces": {
                 "up": { "texture": "#lantern" },
                 "north": { "texture": "#lantern" },
                 "south": { "texture": "#lantern" },
