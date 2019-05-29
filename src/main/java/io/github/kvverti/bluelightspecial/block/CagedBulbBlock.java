@@ -1,9 +1,11 @@
 package io.github.kvverti.bluelightspecial.block;
 
+import net.minecraft.util.DyeColor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.block.ColoredBlock;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
@@ -19,13 +21,16 @@ import net.minecraft.world.World;
 /**
  * A block that emits light corresponding to its redstone power level.
  */
-public class CagedBulbBlock extends Block {
+public class CagedBulbBlock extends Block implements ColoredBlock {
 
     public static final Property<Direction> ATTACH = FluorescentLightBlock.ATTACH;
     public static final Property<Integer> POWER = FluorescentLightBlock.POWER;
 
-    public CagedBulbBlock(Block.Settings settings) {
+    private final DyeColor color;
+
+    public CagedBulbBlock(DyeColor color, Block.Settings settings) {
         super(settings);
+        this.color = color;
         this.setDefaultState(this.stateFactory.getDefaultState()
             .with(ATTACH, Direction.DOWN)
             .with(POWER, 0));
@@ -44,6 +49,11 @@ public class CagedBulbBlock extends Block {
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT_MIPPED;
+    }
+
+    @Override
+    public DyeColor getColor() {
+        return color;
     }
 
     private static final VoxelShape[] BOUNDING_BOXES = {

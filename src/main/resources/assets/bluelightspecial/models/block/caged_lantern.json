@@ -33,11 +33,11 @@
             "from": [7, 0, 7],
             "to": [9, 9, 9],
             "faces": {
-                "up": { "texture": "#lantern" },
-                "north": { "texture": "#lantern" },
-                "south": { "texture": "#lantern" },
-                "west": { "texture": "#lantern" },
-                "east": { "texture": "#lantern" }
+                "up": { "texture": "#lantern", "tintindex": 0 },
+                "north": { "texture": "#lantern", "tintindex": 0 },
+                "south": { "texture": "#lantern", "tintindex": 0 },
+                "west": { "texture": "#lantern", "tintindex": 0 },
+                "east": { "texture": "#lantern", "tintindex": 0 }
             }
         }
     ]
