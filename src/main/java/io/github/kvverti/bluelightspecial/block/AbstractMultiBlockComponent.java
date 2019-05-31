@@ -67,7 +67,9 @@ public abstract class AbstractMultiBlockComponent extends Block implements Multi
                 if(!world.isClient()) {
                     be.scheduleTick(face, 1);
                 }
-                return MultiBlock.toggle(world.getBlockState(pos))
+                BlockState multiBlockState = world.getBlockState(pos);
+                int parity = multiBlockState.get(MultiBlock.PARITY) ^ 1;
+                return multiBlockState.with(MultiBlock.PARITY, parity)
                     .with(MultiBlock.LIGHT, be.getLuminance());
             }
         } else {

@@ -7,6 +7,7 @@ import io.github.kvverti.bluelightspecial.BlueLightSpecial;
 import io.github.kvverti.bluelightspecial.api.FluorescentPowerSource;
 import io.github.kvverti.bluelightspecial.api.RelativeDirection;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -93,7 +94,7 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
         levelMap.computeIfAbsent(world, ForwardingWorld::new);
     }
 
-    public Iterable<BlockState> getBlockStates() {
+    public Collection<BlockState> getBlockStates() {
         return Collections.unmodifiableCollection(containedStates.values());
     }
 

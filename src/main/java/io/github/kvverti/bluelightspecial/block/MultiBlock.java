@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -98,14 +99,6 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
     }
 
     /**
-     * Toggles the state of the block in order to trigger a block update.
-     */
-    public static BlockState toggle(BlockState state) {
-        int parity = state.get(PARITY) ^ 1;
-        return state.with(PARITY, parity);
-    }
-
-    /**
      * Forwards to block entity for state updates.
      */
     @Override
@@ -114,9 +107,7 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
         if(be instanceof MultiBlockEntity) {
             MultiBlockEntity multiblock = (MultiBlockEntity)be;
             boolean toggle = multiblock.getStateForNeighborUpdate(dir, neighbor, neighborPos);
-            int parity = state.get(PARITY) ^ (toggle ? 1 : 0);
-            return state.with(PARITY, parity)
-                .with(LIGHT, multiblock.getLuminance());
+            return toggle ? getReplacementState(state, multiblock) : state;
         }
         return state;
     }
@@ -131,10 +122,9 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
             if(be instanceof MultiBlockEntity) {
                 MultiBlockEntity multiblock = (MultiBlockEntity)be;
                 boolean toggle = multiblock.neighborUpdate(neighbor, neighborPos, idk);
-                int parity = state.get(PARITY) ^ (toggle ? 1 : 0);
-                world.setBlockState(pos,
-                    state.with(PARITY, parity)
-                        .with(LIGHT, multiblock.getLuminance()));
+                if(toggle) {
+                    world.setBlockState(pos, getReplacementState(state, multiblock));
+                }
             }
         }
     }
@@ -149,11 +139,29 @@ public class MultiBlock extends Block implements BlockEntityProvider, Fluorescen
             if(be instanceof MultiBlockEntity) {
                 MultiBlockEntity multiblock = (MultiBlockEntity)be;
                 boolean toggle = multiblock.onScheduledTick(rand);
-                int parity = state.get(PARITY) ^ (toggle ? 1 : 0);
-                world.setBlockState(pos,
-                    state.with(PARITY, parity)
-                        .with(LIGHT, multiblock.getLuminance()));
+                if(toggle) {
+                    world.setBlockState(pos, getReplacementState(state, multiblock));
+                }
             }
+        }
+    }
+
+    /**
+     * Returns the block state to place given the initial block state and the
+     * block entity. The block state may not be a multiblock.
+     */
+    private BlockState getReplacementState(BlockState state, MultiBlockEntity be) {
+        int stateCount = be.getBlockStates().size();
+        if(stateCount == 0) {
+            // no states in the multiblock, set to AIR
+            return Blocks.AIR.getDefaultState();
+        } else if(stateCount == 1) {
+            // one state in the multiblock, set to that state
+            return be.getBlockStates().iterator().next();
+        } else {
+            // toggle the multiblock state
+            int parity = state.get(PARITY) ^ 1;
+            return state.with(PARITY, parity).with(LIGHT, be.getLuminance());
         }
     }
 
