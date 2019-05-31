@@ -1,5 +1,34 @@
 {
-    "parent": "block/block",
+    "display": {
+        "gui": {
+            "rotation": [30, 225, 0],
+            "translation": [0, 3, 0],
+            "scale": [1.1, 1.1, 1.1]
+        },
+        "firstperson_righthand": {
+            "rotation": [0, 47, 0],
+            "translation": [0, 2, 0],
+            "scale": [0.6, 0.6, 0.6]
+        },
+        "firstperson_lefthand": {
+            "rotation": [0, 227, 0],
+            "translation": [0, 2, 0],
+            "scale": [0.6, 0.6, 0.6]
+        },
+        "thirdperson_righthand": {
+            "rotation": [75, 45, 0],
+            "translation": [0, 1.5, 0.5],
+            "scale": [0.5, 0.5, 0.5]
+        },
+        "fixed": {
+            "translation": [0, 2, 0],
+            "scale": [1, 1, 1]
+        },
+        "ground": {
+            "translation": [0, 3, 0],
+            "scale": [0.33, 0.33, 0.33]
+        }
+    },
     "textures": {
         "particle": "bluelightspecial:block/caged_lantern_cage",
         "cage": "bluelightspecial:block/caged_lantern_cage"

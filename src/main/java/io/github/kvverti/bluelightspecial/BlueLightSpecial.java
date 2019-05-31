@@ -60,6 +60,21 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Block GLOW_FLOWER;
     public static final Block POTTED_GLOW_FLOWER;
     public static final Block WHITE_CAGED_LANTERN;
+    public static final Block ORANGE_CAGED_LANTERN;
+    public static final Block MAGENTA_CAGED_LANTERN;
+    public static final Block LIGHT_BLUE_CAGED_LANTERN;
+    public static final Block YELLOW_CAGED_LANTERN;
+    public static final Block LIME_CAGED_LANTERN;
+    public static final Block PINK_CAGED_LANTERN;
+    public static final Block GRAY_CAGED_LANTERN;
+    public static final Block LIGHT_GRAY_CAGED_LANTERN;
+    public static final Block CYAN_CAGED_LANTERN;
+    public static final Block PURPLE_CAGED_LANTERN;
+    public static final Block BLUE_CAGED_LANTERN;
+    public static final Block BROWN_CAGED_LANTERN;
+    public static final Block GREEN_CAGED_LANTERN;
+    public static final Block RED_CAGED_LANTERN;
+    public static final Block BLACK_CAGED_LANTERN;
 
     // custom items
 
@@ -85,6 +100,21 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Item FLUORESCENT_DUST;
     public static final Item CONCENTRATED_FLUORESCENT_DUST;
     public static final Item WHITE_CAGED_LANTERN_ITEM;
+    public static final Item ORANGE_CAGED_LANTERN_ITEM;
+    public static final Item MAGENTA_CAGED_LANTERN_ITEM;
+    public static final Item LIGHT_BLUE_CAGED_LANTERN_ITEM;
+    public static final Item YELLOW_CAGED_LANTERN_ITEM;
+    public static final Item LIME_CAGED_LANTERN_ITEM;
+    public static final Item PINK_CAGED_LANTERN_ITEM;
+    public static final Item GRAY_CAGED_LANTERN_ITEM;
+    public static final Item LIGHT_GRAY_CAGED_LANTERN_ITEM;
+    public static final Item CYAN_CAGED_LANTERN_ITEM;
+    public static final Item PURPLE_CAGED_LANTERN_ITEM;
+    public static final Item BLUE_CAGED_LANTERN_ITEM;
+    public static final Item BROWN_CAGED_LANTERN_ITEM;
+    public static final Item GREEN_CAGED_LANTERN_ITEM;
+    public static final Item RED_CAGED_LANTERN_ITEM;
+    public static final Item BLACK_CAGED_LANTERN_ITEM;
 
     // custom block entities
     public static final BlockEntityType<MultiBlockEntity> MULTI_BLOCK_ENTITY;
@@ -118,6 +148,21 @@ public class BlueLightSpecial implements ModInitializer {
         Registry.register(Registry.BLOCK, new Identifier(MODID, "glow_flower"), GLOW_FLOWER);
         Registry.register(Registry.BLOCK, new Identifier(MODID, "potted_glow_flower"), POTTED_GLOW_FLOWER);
         Registry.register(Registry.BLOCK, new Identifier(MODID, "white_caged_lantern"), WHITE_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "orange_caged_lantern"), ORANGE_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "magenta_caged_lantern"), MAGENTA_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "light_blue_caged_lantern"), LIGHT_BLUE_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "yellow_caged_lantern"), YELLOW_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "lime_caged_lantern"), LIME_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "pink_caged_lantern"), PINK_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "gray_caged_lantern"), GRAY_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "light_gray_caged_lantern"), LIGHT_GRAY_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "cyan_caged_lantern"), CYAN_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "purple_caged_lantern"), PURPLE_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "blue_caged_lantern"), BLUE_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "brown_caged_lantern"), BROWN_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "green_caged_lantern"), GREEN_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "red_caged_lantern"), RED_CAGED_LANTERN);
+        Registry.register(Registry.BLOCK, new Identifier(MODID, "black_caged_lantern"), BLACK_CAGED_LANTERN);
 
         // items
         Registry.register(Registry.ITEM, new Identifier(MODID, "white_fluorescent_light"), WHITE_FLUORESCENT_LIGHT_ITEM);
@@ -142,6 +187,21 @@ public class BlueLightSpecial implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier(MODID, "fluorescent_dust"), FLUORESCENT_DUST);
         Registry.register(Registry.ITEM, new Identifier(MODID, "concentrated_fluorescent_dust"), CONCENTRATED_FLUORESCENT_DUST);
         Registry.register(Registry.ITEM, new Identifier(MODID, "white_caged_lantern"), WHITE_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "orange_caged_lantern"), ORANGE_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "magenta_caged_lantern"), MAGENTA_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "light_blue_caged_lantern"), LIGHT_BLUE_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "yellow_caged_lantern"), YELLOW_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "lime_caged_lantern"), LIME_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "pink_caged_lantern"), PINK_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "gray_caged_lantern"), GRAY_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "light_gray_caged_lantern"), LIGHT_GRAY_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "cyan_caged_lantern"), CYAN_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "purple_caged_lantern"), PURPLE_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "blue_caged_lantern"), BLUE_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "brown_caged_lantern"), BROWN_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "green_caged_lantern"), GREEN_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "red_caged_lantern"), RED_CAGED_LANTERN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(MODID, "black_caged_lantern"), BLACK_CAGED_LANTERN_ITEM);
 
         // block entities
         Registry.register(Registry.BLOCK_ENTITY, new Identifier(MODID, "multiblock"), MULTI_BLOCK_ENTITY);
@@ -206,10 +266,27 @@ public class BlueLightSpecial implements ModInitializer {
             FabricBlockSettings.of(Material.PART)
                 .lightLevel(5)
                 .build());
-        WHITE_CAGED_LANTERN = new CagedBulbBlock(DyeColor.WHITE, FabricBlockSettings.of(Material.PART)
+
+        Block.Settings lanternSettings = FabricBlockSettings.of(Material.PART)
             .strength(0.3f, 0.3f)
             .sounds(BlockSoundGroup.GLASS)
-            .build());
+            .build();
+        WHITE_CAGED_LANTERN = new CagedBulbBlock(DyeColor.WHITE, lanternSettings);
+        ORANGE_CAGED_LANTERN = new CagedBulbBlock(DyeColor.ORANGE, lanternSettings);
+        MAGENTA_CAGED_LANTERN = new CagedBulbBlock(DyeColor.MAGENTA, lanternSettings);
+        LIGHT_BLUE_CAGED_LANTERN = new CagedBulbBlock(DyeColor.LIGHT_BLUE, lanternSettings);
+        YELLOW_CAGED_LANTERN = new CagedBulbBlock(DyeColor.YELLOW, lanternSettings);
+        LIME_CAGED_LANTERN = new CagedBulbBlock(DyeColor.LIME, lanternSettings);
+        PINK_CAGED_LANTERN = new CagedBulbBlock(DyeColor.PINK, lanternSettings);
+        GRAY_CAGED_LANTERN = new CagedBulbBlock(DyeColor.GRAY, lanternSettings);
+        LIGHT_GRAY_CAGED_LANTERN = new CagedBulbBlock(DyeColor.LIGHT_GRAY, lanternSettings);
+        CYAN_CAGED_LANTERN = new CagedBulbBlock(DyeColor.CYAN, lanternSettings);
+        PURPLE_CAGED_LANTERN = new CagedBulbBlock(DyeColor.PURPLE, lanternSettings);
+        BLUE_CAGED_LANTERN = new CagedBulbBlock(DyeColor.BLUE, lanternSettings);
+        BROWN_CAGED_LANTERN = new CagedBulbBlock(DyeColor.BROWN, lanternSettings);
+        GREEN_CAGED_LANTERN = new CagedBulbBlock(DyeColor.GREEN, lanternSettings);
+        RED_CAGED_LANTERN = new CagedBulbBlock(DyeColor.RED, lanternSettings);
+        BLACK_CAGED_LANTERN = new CagedBulbBlock(DyeColor.BLACK, lanternSettings);
 
         Item.Settings lightItemSettings = new Item.Settings()
             .itemGroup(ItemGroup.REDSTONE);
@@ -232,6 +309,21 @@ public class BlueLightSpecial implements ModInitializer {
         FLUORESCENT_TUBE_ITEM = new BlockItem(FLUORESCENT_TUBE, lightItemSettings);
         FLUORESCENT_REPEATER_ITEM = new BlockItem(FLUORESCENT_REPEATER, lightItemSettings);
         WHITE_CAGED_LANTERN_ITEM = new BlockItem(WHITE_CAGED_LANTERN, lightItemSettings);
+        ORANGE_CAGED_LANTERN_ITEM = new BlockItem(ORANGE_CAGED_LANTERN, lightItemSettings);
+        MAGENTA_CAGED_LANTERN_ITEM = new BlockItem(MAGENTA_CAGED_LANTERN, lightItemSettings);
+        LIGHT_BLUE_CAGED_LANTERN_ITEM = new BlockItem(LIGHT_BLUE_CAGED_LANTERN, lightItemSettings);
+        YELLOW_CAGED_LANTERN_ITEM = new BlockItem(YELLOW_CAGED_LANTERN, lightItemSettings);
+        LIME_CAGED_LANTERN_ITEM = new BlockItem(LIME_CAGED_LANTERN, lightItemSettings);
+        PINK_CAGED_LANTERN_ITEM = new BlockItem(PINK_CAGED_LANTERN, lightItemSettings);
+        GRAY_CAGED_LANTERN_ITEM = new BlockItem(GRAY_CAGED_LANTERN, lightItemSettings);
+        LIGHT_GRAY_CAGED_LANTERN_ITEM = new BlockItem(LIGHT_GRAY_CAGED_LANTERN, lightItemSettings);
+        CYAN_CAGED_LANTERN_ITEM = new BlockItem(CYAN_CAGED_LANTERN, lightItemSettings);
+        PURPLE_CAGED_LANTERN_ITEM = new BlockItem(PURPLE_CAGED_LANTERN, lightItemSettings);
+        BLUE_CAGED_LANTERN_ITEM = new BlockItem(BLUE_CAGED_LANTERN, lightItemSettings);
+        BROWN_CAGED_LANTERN_ITEM = new BlockItem(BROWN_CAGED_LANTERN, lightItemSettings);
+        GREEN_CAGED_LANTERN_ITEM = new BlockItem(GREEN_CAGED_LANTERN, lightItemSettings);
+        RED_CAGED_LANTERN_ITEM = new BlockItem(RED_CAGED_LANTERN, lightItemSettings);
+        BLACK_CAGED_LANTERN_ITEM = new BlockItem(BLACK_CAGED_LANTERN, lightItemSettings);
         GLOW_FLOWER_ITEM = new BlockItem(GLOW_FLOWER, new Item.Settings().itemGroup(ItemGroup.DECORATIONS));
 
         Item.Settings matSettings = new Item.Settings().itemGroup(ItemGroup.MATERIALS);

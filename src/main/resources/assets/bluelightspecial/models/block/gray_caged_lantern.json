@@ -1,0 +1,6 @@
+{
+    "parent": "bluelightspecial:block/caged_lantern",
+    "textures": {
+        "lantern": "bluelightspecial:block/gray_caged_lantern"
+    }
+}
