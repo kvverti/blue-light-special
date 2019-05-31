@@ -1,0 +1,30 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "bluelightspecial:light_blue_caged_lantern"
+        ]
+    },
+    "criteria": {
+        "has_fluorescent_light": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:light_blue_fluorescent_light" }
+                ]
+            }
+        },
+        "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "bluelightspecial:light_blue_caged_lantern"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_fluorescent_light",
+            "has_the_recipe"
+        ]
+    ]
+}

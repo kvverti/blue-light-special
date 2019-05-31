@@ -1,0 +1,38 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "bluelightspecial:concentrated_fluorescent_dust",
+            "bluelightspecial:concentrated_fluorescent_dust_blasting"
+        ]
+    },
+    "criteria": {
+        "has_fluorescent_dust": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:fluorescent_dust" }
+                ]
+            }
+        },
+        "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "bluelightspecial:concentrated_fluorescent_dust"
+            }
+        },
+        "has_the_blasting_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "bluelightspecial:concentrated_fluorescent_dust_blasting"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_fluorescent_dust",
+            "has_the_blasting_recipe",
+            "has_the_recipe"
+        ]
+    ]
+}

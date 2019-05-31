@@ -1,0 +1,30 @@
+{
+    "parent": "minecraft:recipes/root",
+    "rewards": {
+        "recipes": [
+            "bluelightspecial:fluorescent_dust"
+        ]
+    },
+    "criteria": {
+        "has_glow_flower": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    { "item": "bluelightspecial:glow_flower" }
+                ]
+            }
+        },
+        "has_the_recipe": {
+            "trigger": "minecraft:recipe_unlocked",
+            "conditions": {
+                "recipe": "bluelightspecial:fluorescent_dust"
+            }
+        }
+    },
+    "requirements": [
+        [
+            "has_glow_flower",
+            "has_the_recipe"
+        ]
+    ]
+}

@@ -1,0 +1,21 @@
+{
+    "replace": false,
+    "values": [
+        "bluelightspecial:white_caged_lantern",
+        "bluelightspecial:orange_caged_lantern",
+        "bluelightspecial:magenta_caged_lantern",
+        "bluelightspecial:light_blue_caged_lantern",
+        "bluelightspecial:yellow_caged_lantern",
+        "bluelightspecial:lime_caged_lantern",
+        "bluelightspecial:pink_caged_lantern",
+        "bluelightspecial:gray_caged_lantern",
+        "bluelightspecial:light_gray_caged_lantern",
+        "bluelightspecial:cyan_caged_lantern",
+        "bluelightspecial:purple_caged_lantern",
+        "bluelightspecial:blue_caged_lantern",
+        "bluelightspecial:brown_caged_lantern",
+        "bluelightspecial:green_caged_lantern",
+        "bluelightspecial:red_caged_lantern",
+        "bluelightspecial:black_caged_lantern"
+    ]
+}
