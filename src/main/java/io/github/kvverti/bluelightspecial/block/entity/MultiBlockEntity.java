@@ -61,6 +61,14 @@ public class MultiBlockEntity extends BlockEntity implements BlockEntityClientSe
     }
 
     /**
+     * Clears the level cache on server stop. This prevents buildup of
+     * stale World instances in SSP.
+     */
+    public static void clearLevelCache() {
+        levelMap.clear();
+    }
+
+    /**
      * Queries whether a contained block state was updated. Calling this
      * method clears the state update flag.
      */

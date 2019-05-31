@@ -9,6 +9,7 @@ import io.github.kvverti.bluelightspecial.feature.FluorescentFlowerFeature;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.event.server.ServerStopCallback;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowerBlock;
@@ -220,6 +221,9 @@ public class BlueLightSpecial implements ModInitializer {
         Biomes.BIRCH_FOREST_HILLS.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, glowFlower);
         Biomes.DARK_FOREST.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, glowFlower);
         Biomes.DARK_FOREST_HILLS.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, glowFlower);
+
+        // callbacks
+        ServerStopCallback.EVENT.register(server -> MultiBlockEntity.clearLevelCache());
     }
 
     static {
