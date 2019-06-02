@@ -4,13 +4,14 @@
   "version": "${version}",
 
   "name": "Blue Light Special",
-  "description": "Adds fluorescent lights and plants.",
+  "description": "Adds fluorescent lights and plants to spice up your night.",
   "authors": [
     "kwerti"
   ],
   "contact": {
     "homepage": "https://github.com/kvverti/blue-light-special",
-    "sources": "https://github.com/kvverti/blue-light-special"
+    "sources": "https://github.com/kvverti/blue-light-special",
+    "issues": "https://github.com/kvverti/blue-light-special/issues"
   },
 
   "license": "MIT",
@@ -28,7 +29,7 @@
 
   "requires": {
     "fabricloader": ">=0.4.0",
-    "fabric": "*"
+    "fabric": ">=0.3.0"
   },
   "suggests": {
     "flamingo": "*"
