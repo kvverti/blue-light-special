@@ -11,7 +11,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.LightType;
 import net.minecraft.world.ViewableWorld;
 
 /**
@@ -43,15 +42,6 @@ public abstract class AbstractTwistleBlock extends Block implements FluidFillabl
         return groundState.getBlock() instanceof AbstractTwistleBlock ||
             (groundState.getMaterial().isSolid() &&
             Block.isSolidFullSquare(groundState, world, ground, Direction.UP));
-    }
-
-    /**
-     * Returns whether the position is suitable fluid-wise.
-     */
-    protected boolean isSuitableFluidPos(ViewableWorld world, BlockPos pos) {
-        // must be placed in water and in low light
-        return world.getFluidState(pos).getFluid() == Fluids.WATER &&
-            world.getLightLevel(LightType.SKY, pos) <= 3;
     }
 
     @Override

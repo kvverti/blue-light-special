@@ -15,6 +15,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.LightType;
+import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
 
 /**
@@ -57,7 +59,7 @@ public class TwistleBlock extends AbstractTwistleBlock {
 
     @Override
     public void onScheduledTick(BlockState state, World world, BlockPos pos, Random rand) {
-        if(isSuitableFluidPos(world, pos)) {
+        if(isSuitableFluidPos(state, world, pos)) {
             int age = state.get(AGE);
             if(age == 5) {
                 if(this.canPlaceAt(state, world, pos.up())) {
@@ -67,5 +69,14 @@ public class TwistleBlock extends AbstractTwistleBlock {
                 world.setBlockState(pos, state.cycle(AGE));
             }
         }
+    }
+
+    /**
+     * Returns whether the position is suitable fluid-wise.
+     */
+    private boolean isSuitableFluidPos(BlockState state, ViewableWorld world, BlockPos pos) {
+        // must be placed in water and in low light
+        return world.getFluidState(pos).getFluid() == this.getFluidState(state).getFluid() &&
+            world.getLightLevel(LightType.SKY, pos) <= 3;
     }
 }
