@@ -5,24 +5,29 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.IntegerProperty;
 import net.minecraft.state.property.Property;
+import net.minecraft.util.Lazy;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 /**
  * An underwater plant similar to kelp that grows in deep water.
  */
-public class TwistleBlock extends TwistlePlantBlock {
+public class TwistleBlock extends AbstractTwistleBlock {
 
     public static final Property<Integer> AGE = IntegerProperty.create("age", 0, 5);
+    private static final VoxelShape shape = Block.createCuboidShape(3.0, 0.0, 3.0, 13.0, 7.0, 13.0);
 
-    private final Block plant;
+    private final Lazy<Block> plant;
 
-    public TwistleBlock(Block.Settings settings, Block plant) {
+    public TwistleBlock(Block.Settings settings, Lazy<Block> plant) {
         super(settings);
         this.plant = plant;
         this.setDefaultState(this.stateFactory.getDefaultState()
@@ -35,25 +40,32 @@ public class TwistleBlock extends TwistlePlantBlock {
     }
 
     @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, EntityContext ctx) {
+        return shape;
+    }
+
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState neighbor, IWorld world, BlockPos pos, BlockPos neighborPos) {
         if(!canPlaceAt(state, world, pos)) {
             return Blocks.AIR.getDefaultState();
         }
         if(dir == Direction.UP && neighbor.getBlock() == this) {
-            return plant.getDefaultState();
+            return plant.get().getDefaultState();
         }
         return state;
     }
 
     @Override
     public void onScheduledTick(BlockState state, World world, BlockPos pos, Random rand) {
-        int age = state.get(AGE);
-        if(age == 5) {
-            if(this.canPlaceAt(state, world, pos.up())) {
-                world.setBlockState(pos.up(), this.getDefaultState());
+        if(isSuitableFluidPos(world, pos)) {
+            int age = state.get(AGE);
+            if(age == 5) {
+                if(this.canPlaceAt(state, world, pos.up())) {
+                    world.setBlockState(pos.up(), this.getDefaultState());
+                }
+            } else {
+                world.setBlockState(pos, state.cycle(AGE));
             }
-        } else {
-            world.setBlockState(pos, state.cycle(AGE));
         }
     }
 }

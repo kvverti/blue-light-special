@@ -29,6 +29,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Lazy;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
@@ -177,13 +178,13 @@ public class BlueLightSpecial implements ModInitializer {
             .sounds(BlockSoundGroup.WET_GRASS)
             .noCollision()
             .lightLevel(11)
-            .build());
+            .build(), new Lazy<>(() -> BlueLightSpecial.TWISTLE));
         TWISTLE = new TwistleBlock(FabricBlockSettings.of(Material.PLANT)
             .sounds(BlockSoundGroup.WET_GRASS)
             .noCollision()
             .lightLevel(11)
             .ticksRandomly()
-            .build(), TWISTLE_PLANT);
+            .build(), new Lazy<>(() -> TWISTLE_PLANT));
 
         Item.Settings lightItemSettings = new Item.Settings()
             .itemGroup(ItemGroup.REDSTONE);
