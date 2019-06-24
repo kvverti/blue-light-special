@@ -6,6 +6,8 @@ import io.github.kvverti.bluelightspecial.block.CagedBulbBlock;
 import io.github.kvverti.bluelightspecial.block.FluorescentLightBlock;
 import io.github.kvverti.bluelightspecial.block.FluorescentRepeaterBlock;
 import io.github.kvverti.bluelightspecial.block.MultiBlock;
+import io.github.kvverti.bluelightspecial.block.TwistleBlock;
+import io.github.kvverti.bluelightspecial.block.TwistlePlantBlock;
 import io.github.kvverti.bluelightspecial.block.entity.MultiBlockEntity;
 import io.github.kvverti.bluelightspecial.feature.FluorescentFlowerFeature;
 
@@ -50,6 +52,8 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Block MULTIBLOCK;
     public static final Block GLOW_FLOWER;
     public static final Block POTTED_GLOW_FLOWER;
+    public static final Block TWISTLE_PLANT;
+    public static final Block TWISTLE;
 
     // custom items
 
@@ -58,6 +62,7 @@ public class BlueLightSpecial implements ModInitializer {
     public static final Item FLUORESCENT_TUBE_ITEM;
     public static final Item FLUORESCENT_REPEATER_ITEM;
     public static final Item GLOW_FLOWER_ITEM;
+    public static final Item TWISTLE_ITEM;
     public static final Item FLUORESCENT_DUST;
     public static final Item CONCENTRATED_FLUORESCENT_DUST;
 
@@ -79,6 +84,8 @@ public class BlueLightSpecial implements ModInitializer {
         register(Registry.BLOCK, "multiblock", MULTIBLOCK);
         register(Registry.BLOCK, "glow_flower", GLOW_FLOWER);
         register(Registry.BLOCK, "potted_glow_flower", POTTED_GLOW_FLOWER);
+        register(Registry.BLOCK, "twistle_plant", TWISTLE_PLANT);
+        register(Registry.BLOCK, "twistle", TWISTLE);
 
         // items
         registerColored(Registry.ITEM, "fluorescent_light", FLUORESCENT_LIGHT_ITEMS);
@@ -86,6 +93,7 @@ public class BlueLightSpecial implements ModInitializer {
         register(Registry.ITEM, "fluorescent_tube", FLUORESCENT_TUBE_ITEM);
         register(Registry.ITEM, "fluorescent_repeater", FLUORESCENT_REPEATER_ITEM);
         register(Registry.ITEM, "glow_flower", GLOW_FLOWER_ITEM);
+        register(Registry.ITEM, "twistle", TWISTLE_ITEM);
         register(Registry.ITEM, "fluorescent_dust", FLUORESCENT_DUST);
         register(Registry.ITEM, "concentrated_fluorescent_dust", CONCENTRATED_FLUORESCENT_DUST);
 
@@ -165,6 +173,17 @@ public class BlueLightSpecial implements ModInitializer {
             FabricBlockSettings.of(Material.PART)
                 .lightLevel(5)
                 .build());
+        TWISTLE_PLANT = new TwistlePlantBlock(FabricBlockSettings.of(Material.PLANT)
+            .sounds(BlockSoundGroup.WET_GRASS)
+            .noCollision()
+            .lightLevel(11)
+            .build());
+        TWISTLE = new TwistleBlock(FabricBlockSettings.of(Material.PLANT)
+            .sounds(BlockSoundGroup.WET_GRASS)
+            .noCollision()
+            .lightLevel(11)
+            .ticksRandomly()
+            .build(), TWISTLE_PLANT);
 
         Item.Settings lightItemSettings = new Item.Settings()
             .itemGroup(ItemGroup.REDSTONE);
@@ -172,11 +191,14 @@ public class BlueLightSpecial implements ModInitializer {
         CAGED_LANTERN_ITEMS = makeColored(col -> new BlockItem(CAGED_LANTERNS.get(col), lightItemSettings));
         FLUORESCENT_TUBE_ITEM = new BlockItem(FLUORESCENT_TUBE, lightItemSettings);
         FLUORESCENT_REPEATER_ITEM = new BlockItem(FLUORESCENT_REPEATER, lightItemSettings);
-        GLOW_FLOWER_ITEM = new BlockItem(GLOW_FLOWER, new Item.Settings().itemGroup(ItemGroup.DECORATIONS));
 
         Item.Settings matSettings = new Item.Settings().itemGroup(ItemGroup.MATERIALS);
         FLUORESCENT_DUST = new Item(matSettings);
         CONCENTRATED_FLUORESCENT_DUST = new Item(matSettings);
+
+        Item.Settings decoSettings = new Item.Settings().itemGroup(ItemGroup.DECORATIONS);
+        GLOW_FLOWER_ITEM = new BlockItem(GLOW_FLOWER, decoSettings);
+        TWISTLE_ITEM = new BlockItem(TWISTLE, decoSettings);
 
         MULTI_BLOCK_ENTITY = BlockEntityType.Builder
             .create(MultiBlockEntity::new, MULTIBLOCK)
