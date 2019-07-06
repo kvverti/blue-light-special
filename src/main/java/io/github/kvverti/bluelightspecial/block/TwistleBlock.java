@@ -59,7 +59,10 @@ public class TwistleBlock extends AbstractTwistleBlock {
 
     @Override
     public void onScheduledTick(BlockState state, World world, BlockPos pos, Random rand) {
-        if(isSuitableFluidPos(state, world, pos)) {
+        // twistle grows using exponential backoff at light levels
+        // above 3, with a half life of two light levels
+        int light = Math.max(0, world.getLightLevel(LightType.SKY, pos) - 3) / 2;
+        if(isSuitableFluidPos(state, world, pos) && rand.nextInt(1 << light) == 0) {
             int age = state.get(AGE);
             if(age == 5) {
                 if(this.canPlaceAt(state, world, pos.up())) {
@@ -76,7 +79,6 @@ public class TwistleBlock extends AbstractTwistleBlock {
      */
     private boolean isSuitableFluidPos(BlockState state, ViewableWorld world, BlockPos pos) {
         // must be placed in water and in low light
-        return world.getFluidState(pos).getFluid() == this.getFluidState(state).getFluid() &&
-            world.getLightLevel(LightType.SKY, pos) <= 3;
+        return world.getFluidState(pos).getFluid() == this.getFluidState(state).getFluid();
     }
 }
