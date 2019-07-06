@@ -10,6 +10,7 @@ import io.github.kvverti.bluelightspecial.block.TwistleBlock;
 import io.github.kvverti.bluelightspecial.block.TwistlePlantBlock;
 import io.github.kvverti.bluelightspecial.block.entity.MultiBlockEntity;
 import io.github.kvverti.bluelightspecial.feature.FluorescentFlowerFeature;
+import io.github.kvverti.bluelightspecial.feature.TwistleFeature;
 
 import java.util.function.Function;
 
@@ -34,6 +35,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.decorator.CountChanceDecoratorConfig;
 import net.minecraft.world.gen.decorator.CountDecoratorConfig;
 import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
@@ -74,6 +76,7 @@ public class BlueLightSpecial implements ModInitializer {
     // custom features
 
     public static final FluorescentFlowerFeature GLOW_FLOWER_FEATURE;
+    public static final TwistleFeature TWISTLE_FEATURE;
 
     @Override
     public void onInitialize() {
@@ -106,7 +109,7 @@ public class BlueLightSpecial implements ModInitializer {
 
         // tweak vanilla biomes
         ConfiguredFeature<?> glowFlower = Biome.configureFeature(
-            BlueLightSpecial.GLOW_FLOWER_FEATURE,
+            GLOW_FLOWER_FEATURE,
             FeatureConfig.DEFAULT,
             Decorator.COUNT_HEIGHTMAP_32,
             new CountDecoratorConfig(2));
@@ -115,6 +118,14 @@ public class BlueLightSpecial implements ModInitializer {
         Biomes.BIRCH_FOREST_HILLS.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, glowFlower);
         Biomes.DARK_FOREST.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, glowFlower);
         Biomes.DARK_FOREST_HILLS.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, glowFlower);
+        ConfiguredFeature<?> twistle = Biome.configureFeature(
+            TWISTLE_FEATURE,
+            FeatureConfig.DEFAULT,
+            Decorator.COUNT_CHANCE_HEIGHTMAP,
+            new CountChanceDecoratorConfig(4, 1.0f / 32.0f));
+        Biomes.DEEP_OCEAN.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, twistle);
+        Biomes.DEEP_COLD_OCEAN.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, twistle);
+        Biomes.DEEP_LUKEWARM_OCEAN.addFeature(GenerationStep.Feature.VEGETAL_DECORATION, twistle);
 
         // callbacks
         ServerStopCallback.EVENT.register(server -> MultiBlockEntity.clearLevelCache());
@@ -206,5 +217,6 @@ public class BlueLightSpecial implements ModInitializer {
             .build(null);
 
         GLOW_FLOWER_FEATURE = new FluorescentFlowerFeature(DefaultFeatureConfig::deserialize);
+        TWISTLE_FEATURE = new TwistleFeature(DefaultFeatureConfig::deserialize);
     }
 }
